@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Neverdecel - DevOps & AI Engineer. Constantly moving forward, never decelerating.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
+    <title>NEVERDECEL // DevOps & AI</title>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'void': '#050508',
+                        'primary': '#0a0a0f',
+                        'surface': '#1a1a2e',
+                        'elevated': '#252542',
+                        'neon-magenta': '#ff00ff',
+                        'neon-cyan': '#00ffff',
+                        'neon-purple': '#8b5cf6',
+                        'text-primary': '#f0f0f0',
+                        'text-secondary': '#b0b0b0',
+                        'text-muted': '#666666',
+                        'terminal-green': '#39ff14',
+                        'terminal-amber': '#ffb000',
+                        'terminal-red': '#ff3366',
+                    },
+                    fontFamily: {
+                        'display': ['JetBrains Mono', 'monospace'],
+                        'body': ['Inter', 'sans-serif'],
+                        'terminal': ['Fira Code', 'monospace'],
+                    },
+                },
+            },
+        }
+    </script>
+
+    <style>
+        :root {
+            --bg-void: #050508;
+            --bg-primary: #0a0a0f;
+            --bg-surface: #1a1a2e;
+            --bg-elevated: #252542;
+            --neon-magenta: #ff00ff;
+            --neon-cyan: #00ffff;
+            --neon-purple: #8b5cf6;
+            --glow-magenta: rgba(255, 0, 255, 0.5);
+            --glow-cyan: rgba(0, 255, 255, 0.4);
+            --glow-purple: rgba(139, 92, 246, 0.4);
+            --text-primary: #f0f0f0;
+            --text-secondary: #b0b0b0;
+            --text-muted: #666666;
+            --terminal-green: #39ff14;
+            --terminal-amber: #ffb000;
+            --terminal-red: #ff3366;
+            --border-subtle: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: var(--neon-cyan) var(--bg-surface);
+        }
+
+        *::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        *::-webkit-scrollbar-track {
+            background: var(--bg-surface);
+        }
+
+        *::-webkit-scrollbar-thumb {
+            background: var(--neon-cyan);
+            border-radius: 3px;
+        }
+
+        /* Glitch Logo Styles */
+        .glitch-logo {
+            position: relative;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .glitch-logo::before,
+        .glitch-logo::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .glitch-logo::before {
+            color: var(--terminal-red);
+            left: 2px;
+            text-shadow: -1px 0 var(--neon-cyan);
+            clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+            animation: glitch-shift-1 3s infinite linear alternate-reverse;
+        }
+
+        .glitch-logo::after {
+            color: var(--neon-cyan);
+            left: -2px;
+            text-shadow: 1px 0 var(--neon-magenta);
+            clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+            animation: glitch-shift-2 2.5s infinite linear alternate-reverse;
+        }
+
+        .glitch-logo:hover::before,
+        .glitch-logo:hover::after {
+            animation-duration: 0.2s;
+        }
+
+        @keyframes glitch-shift-1 {
+            0%, 90%, 100% { transform: translateX(0); opacity: 0.8; }
+            92% { transform: translateX(-3px) skewX(-2deg); opacity: 1; }
+            94% { transform: translateX(2px); opacity: 0.6; }
+            96% { transform: translateX(-1px) skewX(1deg); opacity: 1; }
+        }
+
+        @keyframes glitch-shift-2 {
+            0%, 88%, 100% { transform: translateX(0); opacity: 0.8; }
+            90% { transform: translateX(3px) skewX(2deg); opacity: 1; }
+            93% { transform: translateX(-2px); opacity: 0.6; }
+            95% { transform: translateX(1px) skewX(-1deg); opacity: 1; }
+        }
+
+        /* Hover glitch burst */
+        .glitch-logo:hover {
+            animation: glitch-burst 0.3s steps(2) forwards;
+        }
+
+        @keyframes glitch-burst {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 1px); }
+            40% { transform: translate(2px, -1px); }
+            60% { transform: translate(-1px, 2px); }
+            80% { transform: translate(1px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        /* Scan lines */
+        .scanlines {
+            position: relative;
+        }
+
+        .scanlines::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15) 0px,
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 3px
+            );
+            pointer-events: none;
+            opacity: 0.4;
+            z-index: 10;
+        }
+
+        /* Grid background */
+        .grid-bg {
+            background-image:
+                linear-gradient(var(--border-subtle) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
+            background-size: 60px 60px;
+            background-position: center;
+        }
+
+        /* Terminal styles */
+        .terminal {
+            background: var(--bg-surface);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 8px;
+            box-shadow:
+                0 0 30px rgba(0, 255, 255, 0.15),
+                inset 0 0 60px rgba(0, 255, 255, 0.03);
+        }
+
+        .terminal-header {
+            background: linear-gradient(180deg, rgba(10, 10, 15, 0.95) 0%, rgba(10, 10, 15, 0.8) 100%);
+        }
+
+        /* Typing cursor */
+        .typing-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2em;
+            background-color: var(--neon-cyan);
+            animation: cursor-blink 1s step-end infinite;
+            box-shadow: 0 0 8px var(--glow-cyan), 0 0 16px var(--glow-cyan);
+            vertical-align: text-bottom;
+            margin-left: 2px;
+        }
+
+        @keyframes cursor-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Glow effects */
+        .text-glow-cyan {
+            text-shadow: 0 0 10px var(--glow-cyan), 0 0 20px var(--glow-cyan), 0 0 40px var(--glow-cyan);
+        }
+
+        .text-glow-magenta {
+            text-shadow: 0 0 10px var(--glow-magenta), 0 0 20px var(--glow-magenta);
+        }
+
+        .border-glow-cyan {
+            box-shadow: 0 0 20px var(--glow-cyan), inset 0 0 20px rgba(0, 255, 255, 0.05);
+        }
+
+        /* Avatar glow ring */
+        .avatar-ring {
+            background: conic-gradient(from 0deg, var(--neon-magenta), var(--neon-cyan), var(--neon-purple), var(--neon-magenta));
+            animation: ring-rotate 8s linear infinite;
+        }
+
+        @keyframes ring-rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Project cards */
+        .project-card {
+            background: linear-gradient(135deg, var(--bg-surface) 0%, rgba(26, 26, 46, 0.8) 100%);
+            border: 1px solid var(--border-subtle);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 40%, rgba(139, 92, 246, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
+        }
+
+        .project-card:hover {
+            border-color: var(--neon-purple);
+            box-shadow:
+                0 0 30px var(--glow-purple),
+                0 10px 40px rgba(0, 0, 0, 0.3);
+            transform: translateY(-4px);
+        }
+
+        /* Status pulse */
+        .status-pulse {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 4px var(--terminal-green);
+                opacity: 1;
+            }
+            50% {
+                box-shadow: 0 0 12px var(--terminal-green), 0 0 20px var(--terminal-green);
+                opacity: 0.8;
+            }
+        }
+
+        /* Boot sequence animation */
+        .boot-line {
+            opacity: 0;
+            animation: boot-fade-in 0.3s ease-out forwards;
+        }
+
+        @keyframes boot-fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Social icons hover */
+        .social-icon {
+            transition: all 0.2s ease-out;
+        }
+
+        .social-icon:hover {
+            transform: scale(1.15) translateY(-2px);
+            filter: drop-shadow(0 0 8px var(--neon-cyan));
+        }
+
+        /* Focus states */
+        :focus-visible {
+            outline: 2px solid var(--neon-cyan);
+            outline-offset: 2px;
+        }
+
+        button:focus-visible,
+        a:focus-visible {
+            box-shadow: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--neon-cyan);
+        }
+
+        /* Noise overlay */
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .typing-cursor,
+            .avatar-ring,
+            .glitch-logo::before,
+            .glitch-logo::after,
+            .status-pulse {
+                animation: none;
+            }
+
+            .glitch-logo::before,
+            .glitch-logo::after {
+                opacity: 0;
+            }
+
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Hero background effects */
+        .hero-gradient {
+            background:
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 40% at 80% 50%, rgba(0, 255, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(ellipse 50% 30% at 20% 80%, rgba(255, 0, 255, 0.06) 0%, transparent 40%);
+        }
+    </style>
+</head>
+
+<body class="bg-primary text-text-primary font-body min-h-screen overflow-x-hidden">
+    <!-- Noise overlay -->
+    <div class="noise-overlay"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-primary/90 backdrop-blur-md border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <!-- Glitch Logo -->
+                <a href="#" class="glitch-logo text-xl md:text-2xl text-text-primary" data-text="NEVERDECEL">
+                    NEVERDECEL
+                </a>
+
+                <!-- Nav Links -->
+                <div class="flex items-center gap-6 md:gap-10">
+                    <a href="#projects" class="text-text-secondary hover:text-neon-cyan transition-colors duration-200 font-terminal text-sm tracking-wide">
+                        ./projects
+                    </a>
+                    <a href="#contact" class="text-text-secondary hover:text-neon-magenta transition-colors duration-200 font-terminal text-sm tracking-wide">
+                        ./contact
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative min-h-screen pt-20 md:pt-24 overflow-hidden">
+        <!-- Background layers -->
+        <div class="absolute inset-0 z-0">
+            <!-- Background image with overlay -->
+            <div class="absolute inset-0 bg-gradient-to-b from-void via-primary/95 to-primary z-10"></div>
+            <img
+                src="./image/StockCake-Neon_Wave_Tunnel-2058123-standard.jpg"
+                alt=""
+                class="w-full h-full object-cover opacity-20"
+                aria-hidden="true"
+            >
+        </div>
+
+        <!-- Hero gradient effects -->
+        <div class="absolute inset-0 hero-gradient z-10"></div>
+
+        <!-- Grid overlay -->
+        <div class="absolute inset-0 grid-bg opacity-30 z-10"></div>
+
+        <!-- Content -->
+        <div class="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-16 lg:py-24">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+
+                <!-- Left Column: Identity -->
+                <div class="order-2 lg:order-1 text-center lg:text-left">
+                    <!-- Avatar with animated ring -->
+                    <div class="inline-block mb-8 lg:mb-10">
+                        <div class="relative">
+                            <!-- Rotating gradient ring -->
+                            <div class="absolute -inset-1 avatar-ring rounded-2xl blur-sm opacity-75"></div>
+                            <div class="relative w-40 h-40 md:w-52 md:h-52 lg:w-60 lg:h-60 p-[3px] bg-gradient-to-br from-neon-magenta via-neon-purple to-neon-cyan rounded-2xl">
+                                <div class="w-full h-full rounded-xl overflow-hidden bg-surface">
+                                    <img
+                                        src="./image/neverdecel.jpeg"
+                                        alt="Neverdecel - DevOps & AI Engineer"
+                                        class="w-full h-full object-cover"
+                                    >
+                                </div>
+                            </div>
+                            <!-- Glow effect underneath -->
+                            <div class="absolute -inset-4 bg-gradient-to-br from-neon-magenta/20 via-neon-purple/20 to-neon-cyan/20 rounded-3xl blur-2xl -z-10"></div>
+                        </div>
+                    </div>
+
+                    <!-- Title -->
+                    <h1 class="font-display font-bold text-4xl md:text-5xl lg:text-6xl xl:text-7xl mb-4 leading-tight">
+                        <span class="text-text-primary">DevOps</span>
+                        <span class="text-text-muted mx-2">&</span><br class="hidden sm:block">
+                        <span class="text-neon-magenta text-glow-magenta">AI Engineer</span>
+                    </h1>
+
+                    <!-- Tagline -->
+                    <p class="text-text-secondary text-lg md:text-xl mb-8 font-body max-w-md mx-auto lg:mx-0">
+                        Constantly moving forward,<br class="hidden sm:block">
+                        <span class="text-neon-cyan">never decelerating.</span>
+                    </p>
+
+                    <!-- Tech Stack Pills -->
+                    <div class="flex flex-wrap gap-2 md:gap-3 justify-center lg:justify-start">
+                        <span class="px-3 py-1.5 text-xs md:text-sm font-terminal bg-surface/80 border border-neon-cyan/20 rounded-md text-neon-cyan/90 hover:border-neon-cyan/50 transition-colors">
+                            Kubernetes
+                        </span>
+                        <span class="px-3 py-1.5 text-xs md:text-sm font-terminal bg-surface/80 border border-neon-magenta/20 rounded-md text-neon-magenta/90 hover:border-neon-magenta/50 transition-colors">
+                            Terraform
+                        </span>
+                        <span class="px-3 py-1.5 text-xs md:text-sm font-terminal bg-surface/80 border border-neon-purple/20 rounded-md text-neon-purple/90 hover:border-neon-purple/50 transition-colors">
+                            AI/ML Ops
+                        </span>
+                        <span class="px-3 py-1.5 text-xs md:text-sm font-terminal bg-surface/80 border border-terminal-green/20 rounded-md text-terminal-green/90 hover:border-terminal-green/50 transition-colors">
+                            GitOps
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Right Column: Terminal -->
+                <div class="order-1 lg:order-2">
+                    <div class="terminal scanlines overflow-hidden max-w-xl mx-auto lg:max-w-none">
+                        <!-- Terminal Header -->
+                        <div class="terminal-header flex items-center gap-2 px-4 py-3 border-b border-white/10">
+                            <div class="flex gap-2">
+                                <span class="w-3 h-3 rounded-full bg-terminal-red/80 hover:bg-terminal-red transition-colors"></span>
+                                <span class="w-3 h-3 rounded-full bg-terminal-amber/80 hover:bg-terminal-amber transition-colors"></span>
+                                <span class="w-3 h-3 rounded-full bg-terminal-green/80 hover:bg-terminal-green transition-colors"></span>
+                            </div>
+                            <div class="ml-4 flex items-center gap-2 text-text-muted text-xs font-terminal">
+                                <span class="text-neon-cyan">ava</span>
+                                <span>@</span>
+                                <span>neverdecel</span>
+                                <span class="text-text-muted/50">~</span>
+                            </div>
+                        </div>
+
+                        <!-- Terminal Body -->
+                        <div id="terminal-body" class="p-4 md:p-5 h-80 md:h-96 overflow-y-auto font-terminal text-sm leading-relaxed">
+                            <!-- Boot sequence -->
+                            <div id="boot-sequence">
+                                <div class="boot-line text-terminal-green/80" style="animation-delay: 0.1s">> SYSTEM ONLINE</div>
+                                <div class="boot-line text-terminal-green/80" style="animation-delay: 0.3s">> Ava v2.0.4 initialized</div>
+                                <div class="boot-line text-terminal-green mb-4" style="animation-delay: 0.5s">> Connection established</div>
+                            </div>
+
+                            <!-- Ava's Greeting -->
+                            <div id="ava-greeting" class="boot-line mb-4" style="animation-delay: 0.8s">
+                                <p class="mb-2 text-text-primary">Welcome to the grid. I'm <span class="text-neon-cyan">Ava</span>.</p>
+                                <p class="mb-2 text-text-secondary">Ask me anything about Neverdecel—or just chat. I don't bite... much.</p>
+                                <p class="text-text-muted text-xs">Type <span class="text-terminal-amber">'help'</span> for commands.</p>
+                            </div>
+
+                            <!-- Chat Messages Container -->
+                            <div id="chat-messages"></div>
+                        </div>
+
+                        <!-- Terminal Input -->
+                        <div class="border-t border-white/10 px-4 py-3 bg-primary/60">
+                            <div class="flex items-center gap-2">
+                                <span class="text-terminal-amber font-terminal text-sm shrink-0">guest@grid:~$</span>
+                                <input
+                                    type="text"
+                                    id="terminal-input"
+                                    class="flex-1 bg-transparent border-none outline-none text-text-primary font-terminal text-sm placeholder-text-muted/50"
+                                    placeholder="Enter command..."
+                                    autocomplete="off"
+                                    spellcheck="false"
+                                >
+                                <span class="typing-cursor"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 animate-bounce hidden md:block">
+            <svg class="w-6 h-6 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="relative py-20 lg:py-32 bg-void">
+        <!-- Section gradient -->
+        <div class="absolute inset-0 bg-gradient-to-b from-primary via-void to-void"></div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Section Header -->
+            <div class="text-center mb-16 md:mb-20">
+                <div class="inline-flex items-center gap-3 mb-4">
+                    <span class="text-neon-cyan font-terminal text-lg">*</span>
+                    <h2 class="font-display font-bold text-3xl md:text-4xl lg:text-5xl text-text-primary">
+                        Project Manifest
+                    </h2>
+                </div>
+                <p class="text-text-secondary text-lg font-body">Active systems and open contributions</p>
+                <div class="w-32 h-0.5 bg-gradient-to-r from-transparent via-neon-magenta to-transparent mx-auto mt-6"></div>
+            </div>
+
+            <!-- Live Services -->
+            <div class="mb-16 md:mb-20">
+                <div class="flex items-center gap-3 mb-8">
+                    <span class="w-2.5 h-2.5 rounded-full bg-terminal-green status-pulse"></span>
+                    <h3 class="font-display font-semibold text-xl md:text-2xl text-neon-magenta">Live Services</h3>
+                    <span class="text-text-muted text-sm font-terminal ml-2">// production</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+                    <!-- Project Card: Cloud Dashboard -->
+                    <article class="project-card rounded-xl p-5 md:p-6">
+                        <div class="flex items-start justify-between mb-4">
+                            <h4 class="font-display font-semibold text-lg text-text-primary">
+                                Cloud Dashboard
+                            </h4>
+                            <span class="flex items-center gap-1.5 text-xs text-terminal-green font-terminal">
+                                <span class="w-1.5 h-1.5 rounded-full bg-terminal-green"></span>
+                                99.9%
+                            </span>
+                        </div>
+                        <p class="text-text-secondary text-sm mb-5">Real-time infrastructure monitoring with multi-cloud support</p>
+
+                        <div class="flex flex-wrap gap-2 mb-5">
+                            <span class="px-2 py-0.5 text-xs font-terminal bg-elevated/50 border border-neon-cyan/20 rounded text-neon-cyan/80">React</span>
+                            <span class="px-2 py-0.5 text-xs font-terminal bg-elevated/50 border border-neon-cyan/20 rounded text-neon-cyan/80">Go</span>
+                            <span class="px-2 py-0.5 text-xs font-terminal bg-elevated/50 border border-neon-cyan/20 rounded text-neon-cyan/80">Prometheus</span>
+                        </div>
+
+                        <a href="#" class="inline-flex items-center gap-2 text-text-muted hover:text-neon-cyan transition-colors text-sm font-terminal group">
+                            <span>dashboard.neverdecel.com</span>
+                            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                        </a>
+                    </article>
+
+                    <!-- Project Card: API Gateway -->
+                    <article class="project-card rounded-xl p-5 md:p-6">
+                        <div class="flex items-start justify-between mb-4">
+                            <h4 class="font-display font-semibold text-lg text-text-primary">
+                                API Gateway
+                            </h4>
+                            <span class="flex items-center gap-1.5 text-xs text-terminal-green font-terminal">
+                                <span class="w-1.5 h-1.5 rounded-full bg-terminal-green"></span>
+                                99.95%
+                            </span>
+                        </div>
+                        <p class="text-text-secondary text-sm mb-5">Multi-tenant REST/GraphQL gateway with rate limiting</p>
+
+                        <div class="flex flex-wrap gap-2 mb-5">
+                            <span class="px-2 py-0.5 text-xs font-terminal bg-elevated/50 border border-neon-cyan/20 rounded text-neon-cyan/80">Node.js</span>
+                            <span class="px-2 py-0.5 text-xs font-terminal bg-elevated/50 border border-neon-cyan/20 rounded text-neon-cyan/80">Redis</span>
+                            <span class="px-2 py-0.5 text-xs font-terminal bg-elevated/50 border border-neon-cyan/20 rounded text-neon-cyan/80">Kong</span>
+                        </div>
+
+                        <a href="#" class="inline-flex items-center gap-2 text-text-muted hover:text-neon-cyan transition-colors text-sm font-terminal group">
+                            <span>api.neverdecel.com</span>
+                            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                        </a>
+                    </article>
+
+                    <!-- Project Card: ML Inference -->
+                    <article class="project-card rounded-xl p-5 md:p-6">
+                        <div class="flex items-start justify-between mb-4">
+                            <h4 class="font-display font-semibold text-lg text-text-primary">
+                                ML Inference API
+                            </h4>
+                            <span class="flex items-center gap-1.5 text-xs text-terminal-green font-terminal">
+                                <span class="w-1.5 h-1.5 rounded-full bg-terminal-green"></span>
+                                99.5%
+                            </span>
+                        </div>
+                        <p class="text-text-secondary text-sm mb-5">GPU-accelerated model serving with sub-100ms latency</p>
+
+                        <div class="flex flex-wrap gap-2 mb-5">
+                            <span class="px-2 py-0.5 text-xs font-terminal bg-elevated/50 border border-neon-cyan/20 rounded text-neon-cyan/80">Python</span>
+                            <span class="px-2 py-0.5 text-xs font-terminal bg-elevated/50 border border-neon-cyan/20 rounded text-neon-cyan/80">FastAPI</span>
+                            <span class="px-2 py-0.5 text-xs font-terminal bg-elevated/50 border border-neon-cyan/20 rounded text-neon-cyan/80">Triton</span>
+                        </div>
+
+                        <a href="#" class="inline-flex items-center gap-2 text-text-muted hover:text-neon-cyan transition-colors text-sm font-terminal group">
+                            <span>ml.neverdecel.com</span>
+                            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                        </a>
+                    </article>
+                </div>
+            </div>
+
+            <!-- Open Source -->
+            <div>
+                <div class="flex items-center gap-3 mb-8">
+                    <svg class="w-5 h-5 text-text-primary" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    <h3 class="font-display font-semibold text-xl md:text-2xl text-neon-cyan">Open Source</h3>
+                    <span class="text-text-muted text-sm font-terminal ml-2">// public repos</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+                    <!-- OSS Card: terraform-k8s-modules -->
+                    <article class="project-card rounded-xl p-5 md:p-6">
+                        <div class="flex items-start justify-between mb-4">
+                            <h4 class="font-display font-semibold text-lg text-text-primary">
+                                terraform-k8s-modules
+                            </h4>
+                            <div class="flex items-center gap-3 text-xs text-text-muted font-terminal">
+                                <span class="flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5 text-terminal-amber" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                    </svg>
+                                    234
+                                </span>
+                                <span class="flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M7.707 3.293a1 1 0 010 1.414L5.414 7H11a7 7 0 017 7v2a1 1 0 11-2 0v-2a5 5 0 00-5-5H5.414l2.293 2.293a1 1 0 11-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                    </svg>
+                                    67
+                                </span>
+                            </div>
+                        </div>
+                        <p class="text-text-secondary text-sm mb-5">Production-ready Kubernetes Terraform modules</p>
+
+                        <div class="flex flex-wrap gap-2 mb-5">
+                            <span class="px-2 py-0.5 text-xs font-terminal bg-elevated/50 border border-neon-magenta/20 rounded text-neon-magenta/80">Terraform</span>
+                            <span class="px-2 py-0.5 text-xs font-terminal bg-elevated/50 border border-neon-magenta/20 rounded text-neon-magenta/80">K8s</span>
+                            <span class="px-2 py-0.5 text-xs font-terminal bg-elevated/50 border border-neon-magenta/20 rounded text-neon-magenta/80">AWS</span>
+                        </div>
+
+                        <a href="#" class="inline-flex items-center gap-2 text-text-muted hover:text-neon-magenta transition-colors text-sm font-terminal group">
+                            <span>View on GitHub</span>
+                            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                        </a>
+                    </article>
+
+                    <!-- OSS Card: llm-pipeline -->
+                    <article class="project-card rounded-xl p-5 md:p-6">
+                        <div class="flex items-start justify-between mb-4">
+                            <h4 class="font-display font-semibold text-lg text-text-primary">
+                                llm-pipeline
+                            </h4>
+                            <div class="flex items-center gap-3 text-xs text-text-muted font-terminal">
+                                <span class="flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5 text-terminal-amber" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                    </svg>
+                                    189
+                                </span>
+                                <span class="flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M7.707 3.293a1 1 0 010 1.414L5.414 7H11a7 7 0 017 7v2a1 1 0 11-2 0v-2a5 5 0 00-5-5H5.414l2.293 2.293a1 1 0 11-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                    </svg>
+                                    45
+                                </span>
+                            </div>
+                        </div>
+                        <p class="text-text-secondary text-sm mb-5">End-to-end LLM deployment automation</p>
+
+                        <div class="flex flex-wrap gap-2 mb-5">
+                            <span class="px-2 py-0.5 text-xs font-terminal bg-elevated/50 border border-neon-magenta/20 rounded text-neon-magenta/80">Python</span>
+                            <span class="px-2 py-0.5 text-xs font-terminal bg-elevated/50 border border-neon-magenta/20 rounded text-neon-magenta/80">PyTorch</span>
+                            <span class="px-2 py-0.5 text-xs font-terminal bg-elevated/50 border border-neon-magenta/20 rounded text-neon-magenta/80">MLflow</span>
+                        </div>
+
+                        <a href="#" class="inline-flex items-center gap-2 text-text-muted hover:text-neon-magenta transition-colors text-sm font-terminal group">
+                            <span>View on GitHub</span>
+                            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                        </a>
+                    </article>
+
+                    <!-- OSS Card: devops-toolkit -->
+                    <article class="project-card rounded-xl p-5 md:p-6">
+                        <div class="flex items-start justify-between mb-4">
+                            <h4 class="font-display font-semibold text-lg text-text-primary">
+                                devops-toolkit
+                            </h4>
+                            <div class="flex items-center gap-3 text-xs text-text-muted font-terminal">
+                                <span class="flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5 text-terminal-amber" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                    </svg>
+                                    156
+                                </span>
+                                <span class="flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M7.707 3.293a1 1 0 010 1.414L5.414 7H11a7 7 0 017 7v2a1 1 0 11-2 0v-2a5 5 0 00-5-5H5.414l2.293 2.293a1 1 0 11-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                    </svg>
+                                    34
+                                </span>
+                            </div>
+                        </div>
+                        <p class="text-text-secondary text-sm mb-5">CLI tools for modern DevOps workflows</p>
+
+                        <div class="flex flex-wrap gap-2 mb-5">
+                            <span class="px-2 py-0.5 text-xs font-terminal bg-elevated/50 border border-neon-magenta/20 rounded text-neon-magenta/80">Go</span>
+                            <span class="px-2 py-0.5 text-xs font-terminal bg-elevated/50 border border-neon-magenta/20 rounded text-neon-magenta/80">Bash</span>
+                            <span class="px-2 py-0.5 text-xs font-terminal bg-elevated/50 border border-neon-magenta/20 rounded text-neon-magenta/80">Docker</span>
+                        </div>
+
+                        <a href="#" class="inline-flex items-center gap-2 text-text-muted hover:text-neon-magenta transition-colors text-sm font-terminal group">
+                            <span>View on GitHub</span>
+                            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                        </a>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="relative py-16 md:py-20 bg-primary border-t border-white/5">
+        <!-- Decorative gradient line -->
+        <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-neon-magenta/50 to-transparent"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <!-- Section title -->
+            <div class="mb-10">
+                <span class="font-terminal text-sm text-text-muted tracking-widest">// ESTABLISH CONNECTION</span>
+            </div>
+
+            <!-- Social Links -->
+            <div class="flex justify-center gap-8 md:gap-10 mb-12">
+                <!-- GitHub -->
+                <a href="https://github.com/neverdecel"
+                   class="social-icon text-text-secondary hover:text-text-primary"
+                   aria-label="GitHub"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    <svg class="w-7 h-7 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                </a>
+
+                <!-- LinkedIn -->
+                <a href="https://linkedin.com/in/neverdecel"
+                   class="social-icon text-text-secondary hover:text-text-primary"
+                   aria-label="LinkedIn"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    <svg class="w-7 h-7 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                    </svg>
+                </a>
+
+                <!-- X (Twitter) -->
+                <a href="https://x.com/neverdecel"
+                   class="social-icon text-text-secondary hover:text-text-primary"
+                   aria-label="X (Twitter)"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    <svg class="w-7 h-7 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                </a>
+
+                <!-- Email -->
+                <a href="mailto:neverdecel@proton.me"
+                   class="social-icon text-text-secondary hover:text-text-primary"
+                   aria-label="Email">
+                    <svg class="w-7 h-7 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Copyright -->
+            <div class="text-text-muted text-sm font-terminal space-y-1">
+                <p>&copy; 2025 NEVERDECEL. All systems operational.</p>
+                <p class="text-text-muted/50 text-xs">Built with obsession. Deployed with precision.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Terminal JavaScript -->
+    <script>
+        const AVA_RESPONSES = {
+            greeting: "Welcome to the grid. I'm Ava. Ask me anything about Neverdecel—or just chat. I don't bite... much.",
+
+            help: `<span class="text-terminal-amber">Available commands:</span>
+
+<span class="text-neon-cyan">help</span>     - You're looking at it
+<span class="text-neon-cyan">projects</span> - List active projects
+<span class="text-neon-cyan">skills</span>   - Technical expertise
+<span class="text-neon-cyan">contact</span>  - How to reach Neverdecel
+<span class="text-neon-cyan">whoami</span>   - Who are you?
+<span class="text-neon-cyan">clear</span>    - Clear terminal
+
+Or just type naturally. I understand human.`,
+
+            projects: `<span class="text-terminal-green">[LIVE SYSTEMS]</span>
+<span class="text-text-secondary">•</span> Cloud Dashboard <span class="text-text-muted">- Real-time infrastructure monitoring</span>
+<span class="text-text-secondary">•</span> API Gateway <span class="text-text-muted">- Multi-tenant REST/GraphQL gateway</span>
+<span class="text-text-secondary">•</span> ML Inference API <span class="text-text-muted">- GPU-accelerated model serving</span>
+
+<span class="text-neon-cyan">[OPEN SOURCE]</span>
+<span class="text-text-secondary">•</span> terraform-k8s-modules <span class="text-text-muted">- Production K8s Terraform</span>
+<span class="text-text-secondary">•</span> llm-pipeline <span class="text-text-muted">- End-to-end LLM deployment</span>
+<span class="text-text-secondary">•</span> devops-toolkit <span class="text-text-muted">- CLI tools for DevOps</span>
+
+Scroll down to explore each project.`,
+
+            skills: `<span class="text-neon-magenta">Cloud Architecture</span>
+AWS, GCP, Azure — Multi-cloud by design.
+
+<span class="text-neon-magenta">AI/ML Ops</span>
+Model deployment, LLM integrations, inference optimization.
+
+<span class="text-neon-magenta">Infrastructure</span>
+Kubernetes, Terraform, Docker, GitOps — The whole stack.
+
+<span class="text-neon-magenta">CI/CD</span>
+GitHub Actions, GitLab CI, ArgoCD, Tekton.
+
+<span class="text-text-muted">Everything else? I figure it out. Fast.</span>`,
+
+            contact: `<span class="text-neon-cyan">Ready to collaborate?</span>
+
+<span class="text-terminal-amber">GitHub</span>    → github.com/neverdecel
+<span class="text-terminal-amber">LinkedIn</span>  → linkedin.com/in/neverdecel
+<span class="text-terminal-amber">X</span>         → x.com/neverdecel
+<span class="text-terminal-amber">Email</span>     → neverdecel@proton.me
+
+Or scroll down—those icons are clickable.`,
+
+            whoami: `You? Just another node in the network. But you're here, which means you're curious.
+
+I like curious.
+
+<span class="text-text-muted">Ask me something interesting.</span>`,
+
+            sudo: `<span class="text-terminal-red">Permission denied.</span>
+
+Nice try. Root access requires more than a terminal command.
+
+<span class="text-text-muted">Maybe try social engineering next time.</span>`,
+
+            about: `Neverdecel? They build <span class="text-neon-cyan">infrastructure that thinks</span>. DevOps meets AI. The kind of systems that don't just run—they evolve.
+
+The philosophy is simple: <span class="text-neon-magenta">never stop moving forward</span>. Every system can be optimized. Every process can be automated. Every problem is just an architecture waiting to be designed.`,
+
+            hire: `<span class="text-neon-cyan">Looking to collaborate?</span>
+
+Neverdecel's open to interesting problems—especially at the intersection of infrastructure and intelligence.
+
+Whether it's consulting, contract work, or a full-time position: if the problem is interesting, let's talk.
+
+Type <span class="text-terminal-amber">contact</span> to get in touch.`,
+
+            default: [
+                "Interesting query. Let me process that...\n\n<span class='text-text-muted'>I'm running in demo mode right now. When fully operational, I'll be powered by Gemini. For now, try 'help' to see what I can do.</span>",
+                "That's outside my current dataset. But I appreciate the creativity.\n\n<span class='text-text-muted'>Try 'projects' or 'skills' for the good stuff.</span>",
+                "Hmm. I could speculate, but I'd rather point you somewhere useful.\n\n<span class='text-text-muted'>Type 'help' for commands, or ask about Neverdecel's work.</span>",
+                "Processing... Actually, that's a fascinating question.\n\n<span class='text-text-muted'>Unfortunately, I'm running in demo mode. The real Ava will have better answers.</span>"
+            ]
+        };
+
+        class AvaTerminal {
+            constructor() {
+                this.input = document.getElementById('terminal-input');
+                this.messagesContainer = document.getElementById('chat-messages');
+                this.terminalBody = document.getElementById('terminal-body');
+                this.typingSpeed = 15;
+                this.isTyping = false;
+
+                this.init();
+            }
+
+            init() {
+                this.input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && !this.isTyping) {
+                        this.handleInput();
+                    }
+                });
+
+                // Focus input on terminal click
+                document.querySelector('.terminal').addEventListener('click', (e) => {
+                    if (e.target.tagName !== 'A') {
+                        this.input.focus();
+                    }
+                });
+
+                // Auto-focus on load
+                setTimeout(() => this.input.focus(), 1000);
+            }
+
+            handleInput() {
+                const command = this.input.value.trim().toLowerCase();
+                if (!command) return;
+
+                // Clear command
+                if (command === 'clear') {
+                    this.clearTerminal();
+                    this.input.value = '';
+                    return;
+                }
+
+                // Display user input
+                this.addMessage('user', this.input.value.trim());
+                this.input.value = '';
+
+                // Get response
+                const response = this.getResponse(command);
+
+                // Type out response with delay
+                setTimeout(() => {
+                    this.typeResponse(response);
+                }, 200);
+            }
+
+            getResponse(command) {
+                // Check for exact command matches
+                if (AVA_RESPONSES[command]) {
+                    return AVA_RESPONSES[command];
+                }
+
+                // Check for partial matches
+                if (command.includes('project')) return AVA_RESPONSES.projects;
+                if (command.includes('skill') || command.includes('tech') || command.includes('stack')) return AVA_RESPONSES.skills;
+                if (command.includes('contact') || command.includes('email') || command.includes('reach')) return AVA_RESPONSES.contact;
+                if (command.includes('hire') || command.includes('job') || command.includes('work') || command.includes('collaborate')) return AVA_RESPONSES.hire;
+                if (command.includes('who') && (command.includes('neverdecel') || command.includes('you'))) return AVA_RESPONSES.about;
+                if (command.includes('about')) return AVA_RESPONSES.about;
+                if (command.includes('sudo') || command.includes('root') || command.includes('admin')) return AVA_RESPONSES.sudo;
+                if (command.includes('hello') || command.includes('hi') || command.includes('hey')) {
+                    return "Hey. Welcome to the grid.\n\n<span class='text-text-muted'>Type 'help' if you need direction, or just ask me anything.</span>";
+                }
+
+                // Random default response
+                const defaults = AVA_RESPONSES.default;
+                return defaults[Math.floor(Math.random() * defaults.length)];
+            }
+
+            addMessage(type, content) {
+                const messageEl = document.createElement('div');
+                messageEl.className = 'mb-3';
+
+                if (type === 'user') {
+                    messageEl.innerHTML = `
+                        <div class="flex items-start gap-2">
+                            <span class="text-terminal-amber shrink-0">guest@grid:~$</span>
+                            <span class="text-text-primary">${this.escapeHtml(content)}</span>
+                        </div>
+                    `;
+                } else {
+                    messageEl.innerHTML = `<div class="text-text-primary whitespace-pre-wrap">${content}</div>`;
+                }
+
+                this.messagesContainer.appendChild(messageEl);
+                this.scrollToBottom();
+            }
+
+            async typeResponse(response) {
+                this.isTyping = true;
+
+                const messageEl = document.createElement('div');
+                messageEl.className = 'mb-4';
+                const responseEl = document.createElement('div');
+                responseEl.className = 'text-text-primary whitespace-pre-wrap';
+                messageEl.appendChild(responseEl);
+                this.messagesContainer.appendChild(messageEl);
+
+                // Check for reduced motion preference
+                const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+                if (reducedMotion) {
+                    responseEl.innerHTML = response;
+                    this.scrollToBottom();
+                    this.isTyping = false;
+                    return;
+                }
+
+                // Type character by character (respecting HTML tags)
+                let i = 0;
+                let inTag = false;
+                let currentText = '';
+
+                while (i < response.length) {
+                    const char = response[i];
+
+                    if (char === '<') {
+                        inTag = true;
+                    }
+
+                    currentText += char;
+
+                    if (char === '>') {
+                        inTag = false;
+                    }
+
+                    if (!inTag) {
+                        responseEl.innerHTML = currentText + '<span class="typing-cursor"></span>';
+                        this.scrollToBottom();
+                        await this.sleep(this.typingSpeed);
+                    }
+
+                    i++;
+                }
+
+                // Remove cursor after typing
+                responseEl.innerHTML = currentText;
+                this.isTyping = false;
+            }
+
+            clearTerminal() {
+                // Keep boot sequence, clear chat
+                this.messagesContainer.innerHTML = '';
+
+                // Add cleared message
+                const clearedMsg = document.createElement('div');
+                clearedMsg.className = 'text-text-muted text-xs mb-4';
+                clearedMsg.textContent = '> Terminal cleared';
+                this.messagesContainer.appendChild(clearedMsg);
+            }
+
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            scrollToBottom() {
+                this.terminalBody.scrollTop = this.terminalBody.scrollHeight;
+            }
+
+            sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+        }
+
+        // Initialize on DOM load
+        document.addEventListener('DOMContentLoaded', () => {
+            new AvaTerminal();
+        });
+    </script>
+</body>
+</html>

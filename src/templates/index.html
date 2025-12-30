@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-primary/90 backdrop-blur-md border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <!-- Glitch Logo -->
+                <a href="#" class="glitch-logo text-xl md:text-2xl text-text-primary" data-text="NEVERDECEL">
+                    NEVERDECEL
+                </a>
+
+                <!-- Nav Links -->
+                <div class="flex items-center gap-6 md:gap-10">
+                    <a href="#projects" class="text-text-secondary hover:text-neon-cyan transition-colors duration-200 font-terminal text-sm tracking-wide">
+                        ./projects
+                    </a>
+                    <a href="#contact" class="text-text-secondary hover:text-neon-magenta transition-colors duration-200 font-terminal text-sm tracking-wide">
+                        ./contact
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative min-h-screen pt-20 md:pt-24 overflow-hidden">
+        <!-- Background layers -->
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-gradient-to-b from-void via-primary/95 to-primary z-10"></div>
+            <img
+                src="/image/inspiration-1.jpg"
+                alt=""
+                class="w-full h-full object-cover opacity-20"
+                aria-hidden="true"
+            >
+        </div>
+
+        <!-- Hero gradient effects -->
+        <div class="absolute inset-0 hero-gradient z-10"></div>
+
+        <!-- Grid overlay -->
+        <div class="absolute inset-0 grid-bg opacity-30 z-10"></div>
+
+        <!-- Content -->
+        <div class="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-16 lg:py-24">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+
+                <!-- Left Column: Identity -->
+                <div class="order-2 lg:order-1 text-center lg:text-left">
+                    <!-- Avatar with animated ring -->
+                    <div class="inline-block mb-8 lg:mb-10">
+                        <div class="relative">
+                            <div class="absolute -inset-1 avatar-ring rounded-2xl blur-sm opacity-75"></div>
+                            <div class="relative w-40 h-40 md:w-52 md:h-52 lg:w-60 lg:h-60 p-[3px] bg-gradient-to-br from-neon-magenta via-neon-purple to-neon-cyan rounded-2xl">
+                                <div class="w-full h-full rounded-xl overflow-hidden bg-surface">
+                                    <img
+                                        src="/image/neverdecel-avatar.jpeg"
+                                        alt="Neverdecel - DevOps & AI Engineer"
+                                        class="w-full h-full object-cover"
+                                    >
+                                </div>
+                            </div>
+                            <div class="absolute -inset-4 bg-gradient-to-br from-neon-magenta/20 via-neon-purple/20 to-neon-cyan/20 rounded-3xl blur-2xl -z-10"></div>
+                        </div>
+                    </div>
+
+                    <!-- Title -->
+                    <h1 class="font-display font-bold text-4xl md:text-5xl lg:text-6xl xl:text-7xl mb-4 leading-tight">
+                        <span class="text-text-primary">DevOps</span>
+                        <span class="text-text-muted mx-2">&</span><br class="hidden sm:block">
+                        <span class="text-neon-magenta text-glow-magenta">AI Engineer</span>
+                    </h1>
+
+                    <!-- Tagline -->
+                    <p class="text-text-secondary text-lg md:text-xl mb-8 font-body max-w-md mx-auto lg:mx-0">
+                        Constantly moving forward,<br class="hidden sm:block">
+                        <span class="text-neon-cyan">never decelerating.</span>
+                    </p>
+
+                    <!-- Tech Stack Pills -->
+                    <div class="flex flex-wrap gap-2 md:gap-3 justify-center lg:justify-start">
+                        <span class="px-3 py-1.5 text-xs md:text-sm font-terminal bg-surface/80 border border-neon-cyan/20 rounded-md text-neon-cyan/90 hover:border-neon-cyan/50 transition-colors">
+                            Kubernetes
+                        </span>
+                        <span class="px-3 py-1.5 text-xs md:text-sm font-terminal bg-surface/80 border border-neon-magenta/20 rounded-md text-neon-magenta/90 hover:border-neon-magenta/50 transition-colors">
+                            Terraform
+                        </span>
+                        <span class="px-3 py-1.5 text-xs md:text-sm font-terminal bg-surface/80 border border-neon-purple/20 rounded-md text-neon-purple/90 hover:border-neon-purple/50 transition-colors">
+                            AI/ML Ops
+                        </span>
+                        <span class="px-3 py-1.5 text-xs md:text-sm font-terminal bg-surface/80 border border-terminal-green/20 rounded-md text-terminal-green/90 hover:border-terminal-green/50 transition-colors">
+                            GitOps
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Right Column: Terminal -->
+                <div class="order-1 lg:order-2">
+                    {% include "components/terminal.html" %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 animate-bounce hidden md:block">
+            <svg class="w-6 h-6 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="relative py-20 lg:py-32 bg-void">
+        <div class="absolute inset-0 bg-gradient-to-b from-primary via-void to-void"></div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Section Header -->
+            <div class="text-center mb-16 md:mb-20">
+                <div class="inline-flex items-center gap-3 mb-4">
+                    <span class="text-neon-cyan font-terminal text-lg">*</span>
+                    <h2 class="font-display font-bold text-3xl md:text-4xl lg:text-5xl text-text-primary">
+                        Project Manifest
+                    </h2>
+                </div>
+                <p class="text-text-secondary text-lg font-body">Active systems and open contributions</p>
+                <div class="w-32 h-0.5 bg-gradient-to-r from-transparent via-neon-magenta to-transparent mx-auto mt-6"></div>
+            </div>
+
+            <!-- Live Services -->
+            <div class="mb-16 md:mb-20">
+                <div class="flex items-center gap-3 mb-8">
+                    <span class="w-2.5 h-2.5 rounded-full bg-terminal-green status-pulse"></span>
+                    <h3 class="font-display font-semibold text-xl md:text-2xl text-neon-magenta">Live Services</h3>
+                    <span class="text-text-muted text-sm font-terminal ml-2">// production</span>
+                </div>
+
+                <div class="grid grid-cols-1 gap-5 md:gap-6 max-w-md">
+                    <!-- Studiofijf -->
+                    <a href="https://studiofijf.com/" target="_blank" rel="noopener noreferrer" class="block project-card rounded-xl overflow-hidden group">
+                        <!-- OG Image Preview (compact) -->
+                        <div class="relative aspect-video overflow-hidden">
+                            <img
+                                src="https://studiofijf.com/og-image.png"
+                                alt="Studiofijf - Digital Pottery Design"
+                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            >
+                            <div class="absolute inset-0 bg-gradient-to-t from-surface/90 via-surface/20 to-transparent"></div>
+                            <span class="absolute top-3 right-3 flex items-center gap-1.5 text-xs text-terminal-green font-terminal bg-void/80 px-2 py-1 rounded-full">
+                                <span class="w-1.5 h-1.5 rounded-full bg-terminal-green status-pulse"></span>
+                                live
+                            </span>
+                        </div>
+                        <!-- Card Content -->
+                        <div class="p-4 md:p-5">
+                            <h4 class="font-display font-semibold text-base text-text-primary group-hover:text-neon-cyan transition-colors mb-2">Studiofijf</h4>
+                            <p class="text-text-secondary text-sm mb-3">Digital pottery design tool for custom throwing ribs and slip-cast molds</p>
+                            <div class="flex flex-wrap gap-1.5 mb-3">
+                                <span class="px-2 py-0.5 text-xs font-terminal bg-elevated/50 border border-neon-cyan/20 rounded text-neon-cyan/80">Next.js</span>
+                                <span class="px-2 py-0.5 text-xs font-terminal bg-elevated/50 border border-neon-cyan/20 rounded text-neon-cyan/80">Three.js</span>
+                                <span class="px-2 py-0.5 text-xs font-terminal bg-elevated/50 border border-neon-cyan/20 rounded text-neon-cyan/80">TypeScript</span>
+                            </div>
+                            <span class="inline-flex items-center gap-2 text-text-muted group-hover:text-neon-cyan transition-colors text-sm font-terminal">
+                                <span>studiofijf.com</span>
+                                <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                                </svg>
+                            </span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Open Source -->
+            <div>
+                <div class="flex items-center gap-3 mb-8">
+                    <svg class="w-5 h-5 text-text-primary" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    <h3 class="font-display font-semibold text-xl md:text-2xl text-neon-cyan">Open Source</h3>
+                    <span class="text-text-muted text-sm font-terminal ml-2">// public repos</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+                    <!-- CodeRAG - loaded dynamically -->
+                    <div hx-get="/api/github/Neverdecel/CodeRAG/card"
+                         hx-trigger="load"
+                         hx-swap="outerHTML">
+                        <article class="project-card rounded-xl p-5 md:p-6 animate-pulse">
+                            <div class="h-6 bg-elevated/50 rounded w-1/3 mb-4"></div>
+                            <div class="h-4 bg-elevated/50 rounded w-full mb-2"></div>
+                            <div class="h-4 bg-elevated/50 rounded w-2/3 mb-5"></div>
+                            <div class="flex gap-2 mb-5">
+                                <div class="h-5 bg-elevated/50 rounded w-16"></div>
+                                <div class="h-5 bg-elevated/50 rounded w-12"></div>
+                            </div>
+                            <div class="h-4 bg-elevated/50 rounded w-1/4"></div>
+                        </article>
+                    </div>
+
+                    <!-- ARGent - loaded dynamically -->
+                    <div hx-get="/api/github/Neverdecel/ARGent/card"
+                         hx-trigger="load"
+                         hx-swap="outerHTML">
+                        <article class="project-card rounded-xl p-5 md:p-6 animate-pulse">
+                            <div class="h-6 bg-elevated/50 rounded w-1/3 mb-4"></div>
+                            <div class="h-4 bg-elevated/50 rounded w-full mb-2"></div>
+                            <div class="h-4 bg-elevated/50 rounded w-2/3 mb-5"></div>
+                            <div class="flex gap-2 mb-5">
+                                <div class="h-5 bg-elevated/50 rounded w-16"></div>
+                                <div class="h-5 bg-elevated/50 rounded w-12"></div>
+                            </div>
+                            <div class="h-4 bg-elevated/50 rounded w-1/4"></div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="relative py-16 md:py-20 bg-primary border-t border-white/5">
+        <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-neon-magenta/50 to-transparent"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="mb-10">
+                <span class="font-terminal text-sm text-text-muted tracking-widest">// ESTABLISH CONNECTION</span>
+            </div>
+
+            <!-- Social Links -->
+            <div class="flex justify-center gap-8 md:gap-10 mb-12">
+                <a href="https://github.com/neverdecel" class="social-icon text-text-secondary hover:text-text-primary" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
+                    <svg class="w-7 h-7 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                </a>
+                <a href="https://linkedin.com/in/neverdecel" class="social-icon text-text-secondary hover:text-text-primary" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+                    <svg class="w-7 h-7 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                    </svg>
+                </a>
+                <a href="https://x.com/neverdecel" class="social-icon text-text-secondary hover:text-text-primary" aria-label="X (Twitter)" target="_blank" rel="noopener noreferrer">
+                    <svg class="w-7 h-7 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                </a>
+                <a href="mailto:neverdecel@proton.me" class="social-icon text-text-secondary hover:text-text-primary" aria-label="Email">
+                    <svg class="w-7 h-7 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Copyright -->
+            <div class="text-text-muted text-sm font-terminal space-y-1">
+                <p>&copy; 2025 NEVERDECEL. All systems operational.</p>
+                <p class="text-text-muted/50 text-xs">Built with obsession. Deployed with precision.</p>
+            </div>
+        </div>
+    </footer>
+{% endblock %}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Neverdecel - DevOps & AI Engineer. Constantly moving forward, never decelerating.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
+    <title>{{ title | default("NEVERDECEL // DevOps & AI") }}</title>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'void': '#050508',
+                        'primary': '#0a0a0f',
+                        'surface': '#1a1a2e',
+                        'elevated': '#252542',
+                        'neon-magenta': '#ff00ff',
+                        'neon-cyan': '#00ffff',
+                        'neon-purple': '#8b5cf6',
+                        'text-primary': '#f0f0f0',
+                        'text-secondary': '#b0b0b0',
+                        'text-muted': '#666666',
+                        'terminal-green': '#39ff14',
+                        'terminal-amber': '#ffb000',
+                        'terminal-red': '#ff3366',
+                    },
+                    fontFamily: {
+                        'display': ['JetBrains Mono', 'monospace'],
+                        'body': ['Inter', 'sans-serif'],
+                        'terminal': ['Fira Code', 'monospace'],
+                    },
+                },
+            },
+        }
+    </script>
+
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+
+<body class="bg-primary text-text-primary font-body min-h-screen overflow-x-hidden">
+    <!-- Noise overlay -->
+    <div class="noise-overlay"></div>
+
+    {% block content %}{% endblock %}
+
+    <!-- Terminal JavaScript -->
+    <script src="/static/js/terminal.js"></script>
+</body>
+</html>
