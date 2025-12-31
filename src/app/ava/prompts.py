@@ -92,7 +92,6 @@ whoami   - Who are you?
 clear    - Clear terminal
 
 Or just type naturally. I understand human.""",
-
     "projects": """[LIVE SYSTEMS]
 • Cloud Dashboard - Real-time infrastructure monitoring
 • API Gateway - Multi-tenant REST/GraphQL gateway
@@ -104,7 +103,6 @@ Or just type naturally. I understand human.""",
 • devops-toolkit - CLI tools for DevOps
 
 Scroll down to explore each project.""",
-
     "skills": """Cloud Architecture
 AWS, GCP, Azure — Multi-cloud by design.
 
@@ -118,7 +116,6 @@ CI/CD
 GitHub Actions, GitLab CI, ArgoCD, Tekton.
 
 Everything else? I figure it out. Fast.""",
-
     "contact": """Ready to collaborate?
 
 GitHub    → github.com/neverdecel
@@ -127,19 +124,16 @@ X         → x.com/neverdecel
 Email     → neverdecel@proton.me
 
 Or scroll down—those icons are clickable.""",
-
     "whoami": """You? Just another node in the network. But you're here, which means you're curious.
 
 I like curious.
 
 Ask me something interesting.""",
-
     "sudo": """Permission denied.
 
 Nice try. Root access requires more than a terminal command.
 
 Maybe try social engineering next time.""",
-
     "about": """Neverdecel? They build infrastructure that thinks. DevOps meets AI. The kind of systems that don't just run—they evolve.
 
 The philosophy is simple: never stop moving forward. Every system can be optimized. Every process can be automated. Every problem is just an architecture waiting to be designed.""",

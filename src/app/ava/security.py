@@ -4,7 +4,6 @@ import html
 import re
 import time
 from collections import defaultdict
-from typing import Optional, Tuple
 
 # Rate limiting configuration
 RATE_LIMIT_REQUESTS = 10  # Max requests per window
@@ -43,7 +42,7 @@ INJECTION_PATTERNS = [
 _compiled_patterns = [re.compile(p, re.IGNORECASE) for p in INJECTION_PATTERNS]
 
 
-def check_rate_limit(ip: str) -> Tuple[bool, Optional[str]]:
+def check_rate_limit(ip: str) -> tuple[bool, str | None]:
     """
     Check if an IP is rate limited.
 
@@ -73,7 +72,7 @@ def check_rate_limit(ip: str) -> Tuple[bool, Optional[str]]:
     return True, None
 
 
-def validate_message(message: str) -> Tuple[bool, Optional[str]]:
+def validate_message(message: str) -> tuple[bool, str | None]:
     """
     Validate and sanitize user message.
 
@@ -94,17 +93,17 @@ def sanitize_input(message: str) -> str:
     Sanitize user input to prevent injection and control character abuse.
     """
     # Remove null bytes and other control characters (keep newlines and tabs)
-    message = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]', '', message)
+    message = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]", "", message)
 
     # Normalize whitespace (collapse multiple spaces/newlines)
-    message = re.sub(r'\n{3,}', '\n\n', message)
-    message = re.sub(r' {3,}', '  ', message)
+    message = re.sub(r"\n{3,}", "\n\n", message)
+    message = re.sub(r" {3,}", "  ", message)
 
     # Strip leading/trailing whitespace
     return message.strip()
 
 
-def detect_injection_attempt(message: str) -> Tuple[bool, Optional[str]]:
+def detect_injection_attempt(message: str) -> tuple[bool, str | None]:
     """
     Detect potential prompt injection attempts.
 
@@ -209,6 +208,6 @@ class SessionManager:
         self.sessions.pop(session_id, None)
         self.session_metadata.pop(session_id, None)
 
-    def get_session_info(self, session_id: str) -> Optional[dict]:
+    def get_session_info(self, session_id: str) -> dict | None:
         """Get session metadata."""
         return self.session_metadata.get(session_id)
