@@ -1,6 +1,5 @@
 """Security utilities for Ava AI Agent."""
 
-import html
 import re
 import time
 from collections import defaultdict
