@@ -6,7 +6,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build-push:
@@ -32,8 +31,10 @@ jobs:
       - name: Generate image tags
         id: tags
         run: |
+          IMAGE_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
           TIMESTAMP=$(date -u +%Y%m%d%H%M%S)
           SHA_SHORT=$(echo "${{ github.sha }}" | cut -c1-7)
+          echo "image=${IMAGE_NAME}" >> $GITHUB_OUTPUT
           echo "timestamp=main-${TIMESTAMP}" >> $GITHUB_OUTPUT
           echo "sha=sha-${SHA_SHORT}" >> $GITHUB_OUTPUT
 
@@ -43,8 +44,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.tags.outputs.timestamp }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.tags.outputs.sha }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.REGISTRY }}/${{ steps.tags.outputs.image }}:${{ steps.tags.outputs.timestamp }}
+            ${{ env.REGISTRY }}/${{ steps.tags.outputs.image }}:${{ steps.tags.outputs.sha }}
+            ${{ env.REGISTRY }}/${{ steps.tags.outputs.image }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
