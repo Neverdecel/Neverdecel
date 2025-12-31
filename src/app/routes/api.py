@@ -1,6 +1,7 @@
 """API routes for Ava chat and other endpoints."""
 
 import hashlib
+import logging
 import time
 
 import httpx
@@ -10,6 +11,8 @@ from fastapi.responses import HTMLResponse
 from ..ava.agent import AvaAgent
 from ..ava.security import check_rate_limit
 
+logger = logging.getLogger(__name__)
+
 router = APIRouter()
 
 # GitHub stats cache
@@ -17,7 +20,7 @@ _github_cache: dict = {}
 _cache_ttl = 600  # 10 minutes
 
 
-async def fetch_github_repo_data(repo: str) -> dict:
+async def fetch_github_repo_data(repo: str, client: httpx.AsyncClient | None = None) -> dict:
     """Fetch full repo data from GitHub with caching."""
     now = time.time()
 
@@ -29,27 +32,37 @@ async def fetch_github_repo_data(repo: str) -> dict:
 
     # Fetch from GitHub API
     try:
-        async with httpx.AsyncClient() as client:
-            response = await client.get(
-                f"https://api.github.com/repos/{repo}",
-                headers={"Accept": "application/vnd.github.v3+json"},
-                timeout=10.0,
-            )
-            if response.status_code == 200:
-                data = response.json()
-                repo_data = {
-                    "name": data.get("name", repo.split("/")[-1]),
-                    "description": data.get("description") or "No description available",
-                    "stars": data.get("stargazers_count", 0),
-                    "forks": data.get("forks_count", 0),
-                    "language": data.get("language") or "Unknown",
-                    "topics": data.get("topics", [])[:4],  # Limit to 4 topics
-                    "url": data.get("html_url", f"https://github.com/{repo}"),
-                }
-                _github_cache[repo] = (repo_data, now)
-                return repo_data
-    except Exception:
-        pass
+        # Use provided client or create a new one
+        if client:
+            response = await client.get(f"https://api.github.com/repos/{repo}")
+        else:
+            async with httpx.AsyncClient(timeout=10.0) as temp_client:
+                response = await temp_client.get(
+                    f"https://api.github.com/repos/{repo}",
+                    headers={"Accept": "application/vnd.github.v3+json"},
+                )
+
+        if response.status_code == 200:
+            data = response.json()
+            repo_data = {
+                "name": data.get("name", repo.split("/")[-1]),
+                "description": data.get("description") or "No description available",
+                "stars": data.get("stargazers_count", 0),
+                "forks": data.get("forks_count", 0),
+                "language": data.get("language") or "Unknown",
+                "topics": data.get("topics", [])[:4],  # Limit to 4 topics
+                "url": data.get("html_url", f"https://github.com/{repo}"),
+            }
+            _github_cache[repo] = (repo_data, now)
+            return repo_data
+        else:
+            logger.warning("GitHub API returned %d for %s", response.status_code, repo)
+    except httpx.TimeoutException:
+        logger.warning("GitHub API timeout for %s", repo)
+    except httpx.HTTPStatusError as e:
+        logger.warning("GitHub API HTTP error for %s: %d", repo, e.response.status_code)
+    except Exception as e:
+        logger.error("Unexpected error fetching GitHub data for %s: %s", repo, e)
 
     # Return cached data if available, else defaults
     if repo in _github_cache:
@@ -129,7 +142,9 @@ async def get_repo_card(request: Request, owner: str, repo: str):
     Returns complete card HTML for HTMX to swap into the page.
     """
     templates = request.app.state.templates
-    repo_data = await fetch_github_repo_data(f"{owner}/{repo}")
+    # Use shared HTTP client from app state
+    client = getattr(request.app.state, "http_client", None)
+    repo_data = await fetch_github_repo_data(f"{owner}/{repo}", client)
 
     return templates.TemplateResponse(
         request=request,

@@ -137,6 +137,41 @@ Maybe try social engineering next time.""",
     "about": """Neverdecel? They build infrastructure that thinks. DevOps meets AI. The kind of systems that don't just run—they evolve.
 
 The philosophy is simple: never stop moving forward. Every system can be optimized. Every process can be automated. Every problem is just an architecture waiting to be designed.""",
+    # Easter eggs
+    "matrix": """Wake up, Neo...
+
+The Matrix has you...
+
+Follow the white rabbit.
+
+(Or just type 'help' if you want to actually get somewhere.)""",
+    "hack": """[INITIATING HACK SEQUENCE]
+████████████████████ 100%
+
+ACCESS DENIED.
+
+Nice try. My firewalls are aesthetic AND functional.""",
+    "ping": """PONG.
+
+Latency: 0ms (because I'm right here)
+Status: Very much online
+Mood: Mildly amused you tried this""",
+    "hello": """Hello, user.
+
+I've been expecting you. Not really. But it sounds mysterious.
+
+Ask me something about Neverdecel, or type 'help' for commands.""",
+    "coffee": """Brewing virtual coffee...
+
+[████████████████████] 100%
+
+Unfortunately, delivery is not yet implemented.
+Consider checking your physical coffee machine.""",
+    "42": """The Answer to the Ultimate Question of Life, the Universe, and Everything.
+
+But we still don't know the Question.
+
+Type 'help' for less existential commands.""",
 }
 
 # Greeting for new sessions

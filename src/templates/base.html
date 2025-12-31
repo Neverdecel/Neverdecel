@@ -51,8 +51,16 @@
 </head>
 
 <body class="bg-primary text-text-primary font-body min-h-screen overflow-x-hidden">
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content"
+       class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4
+              bg-neon-cyan text-void px-4 py-2 rounded-md font-terminal z-[60]
+              focus:outline-none focus:ring-2 focus:ring-neon-magenta">
+        Skip to main content
+    </a>
+
     <!-- Noise overlay -->
-    <div class="noise-overlay"></div>
+    <div class="noise-overlay" aria-hidden="true"></div>
 
     {% block content %}{% endblock %}
 

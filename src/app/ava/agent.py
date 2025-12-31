@@ -1,6 +1,8 @@
 """Ava AI Agent powered by Google Gemini."""
 
 import logging
+import time
+from dataclasses import dataclass, field
 
 from google import genai
 from google.genai import types
@@ -19,6 +21,45 @@ from .security import (
 logger = logging.getLogger(__name__)
 
 
+@dataclass
+class CircuitBreaker:
+    """Simple circuit breaker for external API calls."""
+
+    failure_threshold: int = 5
+    reset_timeout: float = 60.0  # seconds
+
+    _failures: int = field(default=0, init=False)
+    _last_failure: float = field(default=0.0, init=False)
+    _state: str = field(default="closed", init=False)  # closed, open, half-open
+
+    def record_failure(self):
+        """Record an API failure."""
+        self._failures += 1
+        self._last_failure = time.time()
+        if self._failures >= self.failure_threshold:
+            self._state = "open"
+            logger.warning("Circuit breaker opened after %d failures", self._failures)
+
+    def record_success(self):
+        """Record a successful API call."""
+        if self._state == "half-open":
+            logger.info("Circuit breaker closed after successful call")
+        self._failures = 0
+        self._state = "closed"
+
+    def can_execute(self) -> bool:
+        """Check if the circuit allows execution."""
+        if self._state == "closed":
+            return True
+        if self._state == "open":
+            if time.time() - self._last_failure > self.reset_timeout:
+                self._state = "half-open"
+                logger.info("Circuit breaker entering half-open state")
+                return True
+            return False
+        return True  # half-open allows one attempt
+
+
 class AvaAgent:
     """Ava AI assistant using Google Gemini with security hardening."""
 
@@ -26,6 +67,7 @@ class AvaAgent:
         self.settings = get_settings()
         self.client: genai.Client | None = None
         self.session_manager = SessionManager()
+        self._circuit_breaker = CircuitBreaker()
 
         # Initialize Gemini if API key is available
         if self.settings.gemini_api_key:
@@ -98,6 +140,11 @@ class AvaAgent:
         if not self.client:
             return FALLBACK_RESPONSE, True
 
+        # Check circuit breaker
+        if not self._circuit_breaker.can_execute():
+            logger.debug("Circuit breaker open, returning fallback response")
+            return FALLBACK_RESPONSE, True
+
         try:
             # Get existing session or create new one
             chat = self.session_manager.get_session(session_id)
@@ -127,11 +174,16 @@ class AvaAgent:
             # Update session activity
             self.session_manager.update_session_activity(session_id)
 
+            # Record success for circuit breaker
+            self._circuit_breaker.record_success()
+
             # Sanitize output before returning
             return sanitize_output(response.text), True
 
         except Exception as e:
             logger.error(f"Gemini API error: {e}")
+            # Record failure for circuit breaker
+            self._circuit_breaker.record_failure()
             return FALLBACK_RESPONSE, True
 
     def reset_session(self, session_id: str = "default"):
