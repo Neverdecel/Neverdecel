@@ -1,7 +1,6 @@
 """Ava AI Agent powered by Google Gemini."""
 
 import logging
-from typing import Optional, Tuple
 
 from google import genai
 from google.genai import types
@@ -25,7 +24,7 @@ class AvaAgent:
 
     def __init__(self):
         self.settings = get_settings()
-        self.client: Optional[genai.Client] = None
+        self.client: genai.Client | None = None
         self.session_manager = SessionManager()
 
         # Initialize Gemini if API key is available
@@ -43,7 +42,7 @@ class AvaAgent:
             logger.error(f"Failed to initialize Gemini: {e}")
             self.client = None
 
-    def _check_builtin_command(self, message: str) -> Optional[str]:
+    def _check_builtin_command(self, message: str) -> str | None:
         """Check if the message is a built-in command."""
         command = message.strip().lower()
 
@@ -63,7 +62,7 @@ class AvaAgent:
 
         return None
 
-    async def chat(self, message: str, session_id: str = "default") -> Tuple[str, bool]:
+    async def chat(self, message: str, session_id: str = "default") -> tuple[str, bool]:
         """
         Process a chat message and return Ava's response.
 
@@ -90,7 +89,9 @@ class AvaAgent:
         # Check for prompt injection attempts
         is_injection, pattern = detect_injection_attempt(message)
         if is_injection:
-            logger.warning(f"Injection attempt detected from session {session_id}: pattern={pattern}")
+            logger.warning(
+                f"Injection attempt detected from session {session_id}: pattern={pattern}"
+            )
             return get_injection_warning(), True
 
         # If no Gemini client, return fallback

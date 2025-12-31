@@ -2,7 +2,6 @@
 
 import hashlib
 import time
-from typing import Optional
 
 import httpx
 from fastapi import APIRouter, Form, Request
@@ -64,6 +63,7 @@ async def fetch_github_repo_data(repo: str) -> dict:
         "topics": [],
         "url": f"https://github.com/{repo}",
     }
+
 
 # Initialize Ava agent
 ava = AvaAgent()
