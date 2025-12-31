@@ -1,17 +1,17 @@
 {# Chat message partial - returned by /api/ava/chat for HTMX swap #}
 
 {# User message - escaped by default for XSS protection #}
-<div class="mb-3">
+<div class="mb-3" role="article" aria-label="Your message">
     <div class="flex items-start gap-2">
-        <span class="text-terminal-amber shrink-0">guest@grid:~$</span>
+        <span class="text-terminal-amber shrink-0" aria-hidden="true">guest@grid:~$</span>
         <span class="text-text-primary break-all">{{ user_message | truncate(500) }}</span>
     </div>
 </div>
 
 {# Ava's response - NOT using |safe for security #}
-<div class="mb-4">
+<div class="mb-4" role="article" aria-label="Ava's response">
     {% if is_error %}
-    <div class="text-terminal-red whitespace-pre-wrap">{{ ava_response }}</div>
+    <div class="text-terminal-red whitespace-pre-wrap" role="alert">{{ ava_response }}</div>
     {% else %}
     <div class="text-text-primary whitespace-pre-wrap">{{ ava_response }}</div>
     {% endif %}

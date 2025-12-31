@@ -1,6 +1,5 @@
 """Security utilities for Ava AI Agent."""
 
-import html
 import re
 import time
 from collections import defaultdict
@@ -121,16 +120,17 @@ def detect_injection_attempt(message: str) -> tuple[bool, str | None]:
 
 def sanitize_output(response: str) -> str:
     """
-    Sanitize AI output to prevent XSS attacks.
-    Escapes HTML entities while preserving intended formatting.
+    Sanitize AI output for display.
+    Note: HTML escaping is handled by Jinja2's auto-escape feature.
+    This function handles other sanitization like control characters.
     """
-    # Escape HTML entities
-    escaped = html.escape(response)
+    # Remove any control characters that might have slipped through
+    response = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]", "", response)
 
-    # Convert newlines to <br> for HTML display (optional, depends on frontend)
-    # escaped = escaped.replace('\n', '<br>')
+    # Normalize excessive whitespace
+    response = re.sub(r"\n{4,}", "\n\n\n", response)
 
-    return escaped
+    return response.strip()
 
 
 def get_injection_warning() -> str:

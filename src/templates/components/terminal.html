@@ -1,8 +1,8 @@
 {# Ava Terminal Component with HTMX #}
-<div class="terminal scanlines overflow-hidden max-w-xl mx-auto lg:max-w-none">
+<div class="terminal scanlines overflow-hidden max-w-xl mx-auto lg:max-w-none" role="region" aria-label="Ava AI Terminal">
     <!-- Terminal Header -->
     <div class="terminal-header flex items-center gap-2 px-4 py-3 border-b border-white/10">
-        <div class="flex gap-2">
+        <div class="flex gap-2" aria-hidden="true">
             <span class="w-3 h-3 rounded-full bg-terminal-red/80 hover:bg-terminal-red transition-colors"></span>
             <span class="w-3 h-3 rounded-full bg-terminal-amber/80 hover:bg-terminal-amber transition-colors"></span>
             <span class="w-3 h-3 rounded-full bg-terminal-green/80 hover:bg-terminal-green transition-colors"></span>
@@ -18,7 +18,7 @@
     <!-- Terminal Body -->
     <div id="terminal-body" class="p-4 md:p-5 h-80 md:h-96 overflow-y-auto font-terminal text-sm leading-relaxed">
         <!-- Boot sequence -->
-        <div id="boot-sequence">
+        <div id="boot-sequence" aria-hidden="true">
             <div class="boot-line text-terminal-green/80" style="animation-delay: 0.1s">> SYSTEM ONLINE</div>
             <div class="boot-line text-terminal-green/80" style="animation-delay: 0.3s">> Ava v2.0.4 initialized</div>
             <div class="boot-line text-terminal-green mb-4" style="animation-delay: 0.5s">> Connection established</div>
@@ -31,11 +31,18 @@
             <p class="text-text-muted text-xs">Type <span class="text-terminal-amber">'help'</span> for commands.</p>
         </div>
 
-        <!-- Chat Messages Container (HTMX target) -->
-        <div id="chat-messages"></div>
+        <!-- Chat Messages Container (HTMX target) with ARIA live region -->
+        <div id="chat-messages"
+             role="log"
+             aria-live="polite"
+             aria-label="Chat conversation with Ava"
+             aria-relevant="additions"></div>
 
         <!-- Typing indicator (shown during HTMX request) -->
-        <div id="typing-indicator" class="htmx-indicator text-text-muted text-sm">
+        <div id="typing-indicator"
+             class="htmx-indicator text-text-muted text-sm"
+             role="status"
+             aria-live="polite">
             <span class="text-neon-cyan">Ava</span> is thinking<span class="typing-dots">...</span>
         </div>
     </div>
@@ -46,21 +53,26 @@
               hx-post="/api/ava/chat"
               hx-target="#chat-messages"
               hx-swap="beforeend"
-              hx-indicator="#typing-indicator"
-              hx-on::after-request="document.getElementById('terminal-input').value = ''; document.getElementById('terminal-body').scrollTop = document.getElementById('terminal-body').scrollHeight;">
+              hx-indicator="#typing-indicator">
             <div class="flex items-center gap-2">
-                <span class="text-terminal-amber font-terminal text-sm shrink-0">guest@grid:~$</span>
+                <label for="terminal-input" class="text-terminal-amber font-terminal text-sm shrink-0">guest@grid:~$</label>
                 <input
                     type="text"
                     name="message"
                     id="terminal-input"
-                    class="flex-1 bg-transparent border-none outline-none text-text-primary font-terminal text-sm placeholder-text-muted/50"
+                    class="flex-1 bg-transparent border-none outline-none text-text-primary font-terminal text-sm placeholder-text-muted/50 focus:ring-0"
                     placeholder="Enter command..."
                     autocomplete="off"
                     spellcheck="false"
+                    maxlength="500"
+                    aria-label="Enter your message to Ava"
+                    aria-describedby="input-hint"
                 >
-                <span class="typing-cursor"></span>
+                <span class="typing-cursor" aria-hidden="true"></span>
             </div>
+            <span id="input-hint" class="sr-only">
+                Type a message and press Enter to send. Maximum 500 characters. Type 'help' for available commands.
+            </span>
         </form>
     </div>
 </div>
