@@ -41,29 +41,32 @@
 
 ---
 
-### GitHub Stats
+### GitHub
 
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=Neverdecel&show_icons=true&theme=transparent&title_color=00ffff&icon_color=ff00ff&text_color=f0f0f0&hide_border=true" alt="GitHub Stats" height="165"/>
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Neverdecel&layout=compact&theme=transparent&title_color=00ffff&text_color=f0f0f0&hide_border=true" alt="Top Languages" height="165"/>
+  <a href="https://github.com/Neverdecel?tab=repositories">
+    <img src="https://img.shields.io/badge/Repositories-00ffff?style=for-the-badge&logo=github&logoColor=black" alt="Repos"/>
+  </a>
+  <a href="https://github.com/Neverdecel?tab=stars">
+    <img src="https://img.shields.io/badge/Stars-ff00ff?style=for-the-badge&logo=github&logoColor=black" alt="Stars"/>
+  </a>
+  <a href="https://github.com/Neverdecel?tab=followers">
+    <img src="https://img.shields.io/badge/Followers-8b5cf6?style=for-the-badge&logo=github&logoColor=white" alt="Followers"/>
+  </a>
 </p>
 
 ---
 
-### Contribution Graph
-
 <p align="center">
-  <img src="https://neverdecel.com/image/neverdecel-avatar.jpeg" alt="NEVERDECEL" height="80" style="border-radius: 8px;"/>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Neverdecel/Neverdecel/output/github-snake-dark.svg" />
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Neverdecel/Neverdecel/output/github-snake.svg" />
+    <img src="https://raw.githubusercontent.com/Neverdecel/Neverdecel/output/github-snake-dark.svg" />
+  </picture>
 </p>
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Neverdecel/neverdecel/output/github-snake-dark.svg" />
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Neverdecel/neverdecel/output/github-snake.svg" />
-  <img alt="github-snake" src="https://raw.githubusercontent.com/Neverdecel/neverdecel/output/github-snake-dark.svg" />
-</picture>
 
 ---
 
 <p align="center">
-  <em>Built with obsession. Deployed with precision.</em>
+  <code>Constantly moving forward, never decelerating.</code>
 </p>
