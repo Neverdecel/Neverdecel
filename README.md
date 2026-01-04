@@ -1,104 +1,65 @@
-# Neverdecel Portfolio
+<div align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?font=JetBrains+Mono&weight=600&size=28&duration=3000&pause=1000&color=00FFFF&center=true&vCenter=true&width=500&lines=DevOps+%26+AI+Engineer;Never+decelerating." alt="Typing SVG" />
+</div>
 
-A cyberpunk-themed portfolio website for a DevOps & AI Engineer, featuring Ava - an AI assistant powered by Google Gemini.
+<br/>
 
-## Tech Stack
+<p align="center">
+  Building infrastructure that thinks. Systems that don't just run — they evolve.
+</p>
 
-- **Backend**: FastAPI (Python)
-- **Frontend**: HTMX + Tailwind CSS
-- **AI**: Google Gemini API
-- **Container**: Docker
+<p align="center">
+  <a href="https://landonorris.com">
+    <img src="https://img.shields.io/badge/Portfolio-landonorris.com-00ffff?style=flat-square&logo=google-chrome&logoColor=white" alt="Portfolio"/>
+  </a>
+  <a href="https://linkedin.com/in/neverdecel">
+    <img src="https://img.shields.io/badge/LinkedIn-neverdecel-0077B5?style=flat-square&logo=linkedin&logoColor=white" alt="LinkedIn"/>
+  </a>
+  <a href="https://x.com/neverdecel">
+    <img src="https://img.shields.io/badge/X-@neverdecel-000000?style=flat-square&logo=x&logoColor=white" alt="X"/>
+  </a>
+</p>
 
-## Quick Start
+---
 
-### Prerequisites
+### Tech Stack
 
-- Python 3.12+
-- Google Gemini API key
+<p align="center">
+  <img src="https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white" alt="Kubernetes"/>
+  <img src="https://img.shields.io/badge/Terraform-7B42BC?style=for-the-badge&logo=terraform&logoColor=white" alt="Terraform"/>
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker"/>
+  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"/>
+  <img src="https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white" alt="Go"/>
+</p>
 
-### Local Development
+<p align="center">
+  <img src="https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white" alt="AWS"/>
+  <img src="https://img.shields.io/badge/GCP-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white" alt="GCP"/>
+  <img src="https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white" alt="GitHub Actions"/>
+  <img src="https://img.shields.io/badge/ArgoCD-EF7B4D?style=for-the-badge&logo=argo&logoColor=white" alt="ArgoCD"/>
+</p>
 
-1. **Clone and setup environment**
+---
 
-```bash
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+### GitHub Stats
 
-# Install dependencies
-pip install -r requirements.txt
+<p align="center">
+  <img src="https://github-readme-stats.vercel.app/api?username=neverdecel&show_icons=true&theme=transparent&title_color=00ffff&icon_color=ff00ff&text_color=f0f0f0&hide_border=true" alt="GitHub Stats" height="165"/>
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=neverdecel&layout=compact&theme=transparent&title_color=00ffff&text_color=f0f0f0&hide_border=true" alt="Top Languages" height="165"/>
+</p>
 
-# Create .env from example
-cp .env.example .env
-# Edit .env and add your GEMINI_API_KEY
-```
+---
 
-2. **Run the development server**
+### Contribution Graph
 
-```bash
-uvicorn src.app.main:app --reload --port 8000
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Neverdecel/neverdecel/output/github-snake-dark.svg" />
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Neverdecel/neverdecel/output/github-snake.svg" />
+  <img alt="github-snake" src="https://raw.githubusercontent.com/Neverdecel/neverdecel/output/github-snake-dark.svg" />
+</picture>
 
-3. **Open in browser**
+---
 
-Visit [http://localhost:8000](http://localhost:8000)
-
-### Docker Development
-
-```bash
-# Build and run
-docker-compose up --build
-
-# Or with hot reload
-docker-compose --profile dev up --build
-```
-
-## Project Structure
-
-```
-neverdecel/
-├── src/
-│   ├── app/
-│   │   ├── main.py           # FastAPI application
-│   │   ├── config.py         # Settings
-│   │   ├── routes/           # API routes
-│   │   └── ava/              # AI agent
-│   ├── templates/            # Jinja2 templates
-│   └── static/               # CSS/JS assets
-├── image/                    # Brand assets
-├── docs/                     # Documentation
-├── Dockerfile
-├── docker-compose.yml
-└── requirements.txt
-```
-
-## Environment Variables
-
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `GEMINI_API_KEY` | Google Gemini API key | Yes |
-| `ENVIRONMENT` | `development` or `production` | No |
-| `LOG_LEVEL` | Logging level | No |
-
-## API Endpoints
-
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/` | Landing page |
-| POST | `/api/ava/chat` | Chat with Ava |
-| GET | `/health` | Health check |
-
-## Ava Commands
-
-Type these in the terminal:
-
-- `help` - Show available commands
-- `projects` - List projects
-- `skills` - Technical expertise
-- `contact` - Contact info
-- `whoami` - Who are you?
-- `clear` - Clear terminal
-
-## License
-
-MIT
+<p align="center">
+  <em>Built with obsession. Deployed with precision.</em>
+</p>
