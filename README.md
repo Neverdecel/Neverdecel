@@ -9,8 +9,8 @@
 </p>
 
 <p align="center">
-  <a href="https://landonorris.com">
-    <img src="https://img.shields.io/badge/Portfolio-landonorris.com-00ffff?style=flat-square&logo=google-chrome&logoColor=white" alt="Portfolio"/>
+  <a href="https://neverdecel.com">
+    <img src="https://img.shields.io/badge/Portfolio-neverdecel.com-00ffff?style=flat-square&logo=google-chrome&logoColor=white" alt="Portfolio"/>
   </a>
   <a href="https://linkedin.com/in/neverdecel">
     <img src="https://img.shields.io/badge/LinkedIn-neverdecel-0077B5?style=flat-square&logo=linkedin&logoColor=white" alt="LinkedIn"/>
@@ -44,8 +44,8 @@
 ### GitHub Stats
 
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=neverdecel&show_icons=true&theme=transparent&title_color=00ffff&icon_color=ff00ff&text_color=f0f0f0&hide_border=true" alt="GitHub Stats" height="165"/>
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=neverdecel&layout=compact&theme=transparent&title_color=00ffff&text_color=f0f0f0&hide_border=true" alt="Top Languages" height="165"/>
+  <img src="https://github-readme-stats.vercel.app/api?username=Neverdecel&show_icons=true&theme=transparent&title_color=00ffff&icon_color=ff00ff&text_color=f0f0f0&hide_border=true" alt="GitHub Stats" height="165"/>
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Neverdecel&layout=compact&theme=transparent&title_color=00ffff&text_color=f0f0f0&hide_border=true" alt="Top Languages" height="165"/>
 </p>
 
 ---
