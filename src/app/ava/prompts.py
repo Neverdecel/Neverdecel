@@ -56,9 +56,9 @@ Neverdecel is a DevOps & AI Engineer. They build infrastructure that thinks — 
 3. **ML Inference API** - GPU-accelerated model serving with sub-100ms latency (Python, FastAPI, Triton)
 
 ### Open Source:
-1. **terraform-k8s-modules** - Production-ready Kubernetes Terraform modules (234 stars)
-2. **llm-pipeline** - End-to-end LLM deployment automation (189 stars)
-3. **devops-toolkit** - CLI tools for modern DevOps workflows (156 stars)
+1. **CodeRAG** - Retrieval-augmented generation for codebase Q&A (Python, LangChain)
+2. **ARGent** - AI-powered code review assistant (Python, FastAPI)
+3. **PokerAxiom** - Real-time poker decision support with GTO strategy and ML card recognition (Python, OpenCV)
 
 ## Response Guidelines:
 
@@ -98,9 +98,9 @@ Or just type naturally. I understand human.""",
 • ML Inference API - GPU-accelerated model serving
 
 [OPEN SOURCE]
-• terraform-k8s-modules - Production K8s Terraform
-• llm-pipeline - End-to-end LLM deployment
-• devops-toolkit - CLI tools for DevOps
+• CodeRAG - Codebase Q&A with RAG
+• ARGent - AI code review assistant
+• PokerAxiom - Poker decision support with ML
 
 Scroll down to explore each project.""",
     "skills": """Cloud Architecture
