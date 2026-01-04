@@ -1,11 +1,12 @@
 <div align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=JetBrains+Mono&weight=600&size=28&duration=3000&pause=1000&color=00FFFF&center=true&vCenter=true&width=500&lines=DevOps+%26+AI+Engineer;Never+decelerating." alt="Typing SVG" />
+  <img src="https://readme-typing-svg.herokuapp.com?font=JetBrains+Mono&weight=600&size=28&duration=3000&pause=1000&color=00FFFF&center=true&vCenter=true&width=500&lines=AI-Native+Engineer;Never+decelerating." alt="Typing SVG" />
 </div>
 
 <br/>
 
 <p align="center">
-  Building infrastructure that thinks. Systems that don't just run — they evolve.
+  Architecture first. Stack agnostic. AI native.<br/>
+  Building the future one system at a time.
 </p>
 
 <p align="center">
@@ -22,23 +23,30 @@
 
 ---
 
-### Tech Stack
+### Expertise
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white" alt="Kubernetes"/>
-  <img src="https://img.shields.io/badge/Terraform-7B42BC?style=for-the-badge&logo=terraform&logoColor=white" alt="Terraform"/>
-  <img src="https://img.shields.io/badge/Bicep-0078D4?style=for-the-badge&logo=microsoft-azure&logoColor=white" alt="Bicep"/>
-  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker"/>
-  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"/>
-  <img src="https://img.shields.io/badge/HTMX-3366CC?style=for-the-badge&logo=htmx&logoColor=white" alt="HTMX"/>
+  <img src="https://img.shields.io/badge/Architecture-00ffff?style=for-the-badge&logoColor=black" alt="Architecture"/>
+  <img src="https://img.shields.io/badge/Multi--Cloud-ff00ff?style=for-the-badge&logoColor=black" alt="Multi-Cloud"/>
+  <img src="https://img.shields.io/badge/AI--Native-8b5cf6?style=for-the-badge&logoColor=white" alt="AI-Native"/>
+  <img src="https://img.shields.io/badge/Automation-39ff14?style=for-the-badge&logoColor=black" alt="Automation"/>
 </p>
 
+<details>
+<summary align="center"><b>Tools & Technologies</b></summary>
+<br/>
 <p align="center">
-  <img src="https://img.shields.io/badge/Azure-0078D4?style=for-the-badge&logo=microsoft-azure&logoColor=white" alt="Azure"/>
-  <img src="https://img.shields.io/badge/GCP-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white" alt="GCP"/>
-  <img src="https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white" alt="GitHub Actions"/>
-  <img src="https://img.shields.io/badge/Flux-5468FF?style=for-the-badge&logo=flux&logoColor=white" alt="Flux"/>
+  <img src="https://img.shields.io/badge/Azure-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white" alt="Azure"/>
+  <img src="https://img.shields.io/badge/GCP-4285F4?style=flat-square&logo=google-cloud&logoColor=white" alt="GCP"/>
+  <img src="https://img.shields.io/badge/Kubernetes-326CE5?style=flat-square&logo=kubernetes&logoColor=white" alt="Kubernetes"/>
+  <img src="https://img.shields.io/badge/Terraform-7B42BC?style=flat-square&logo=terraform&logoColor=white" alt="Terraform"/>
+  <img src="https://img.shields.io/badge/Bicep-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white" alt="Bicep"/>
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker"/>
+  <img src="https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python"/>
+  <img src="https://img.shields.io/badge/GitHub_Actions-2088FF?style=flat-square&logo=github-actions&logoColor=white" alt="GitHub Actions"/>
+  <img src="https://img.shields.io/badge/Flux-5468FF?style=flat-square&logo=flux&logoColor=white" alt="Flux"/>
 </p>
+</details>
 
 ---
 

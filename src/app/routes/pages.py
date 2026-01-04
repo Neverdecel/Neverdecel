@@ -13,6 +13,6 @@ async def index(request: Request):
         request=request,
         name="index.html",
         context={
-            "title": "NEVERDECEL // DevOps & AI",
+            "title": "Neverdecel | AI-Native Engineer",
         },
     )
