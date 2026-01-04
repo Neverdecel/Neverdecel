@@ -131,11 +131,14 @@ Visitors should leave:
 ### Philosophy
 > I believe AI is the key to solving complex problems. Not by replacing engineering, but by amplifying it. I leverage AI to rapidly learn best practices across stacks, focus on high-level architecture, and ship systems that scale.
 
-### Areas of Expertise
-- Cloud Architecture (Azure, GCP)
-- AI/ML Ops (Model deployment, LLM integrations)
-- Infrastructure (Kubernetes, Terraform, Bicep, Docker, GitOps)
-- CI/CD & Automation (GitHub Actions, GitLab CI, ArgoCD, Flux)
+### Core Expertise
+- **Architecture** — System design, scalable infrastructure, high-level problem solving
+- **Multi-Cloud** — Azure, GCP; platform-agnostic thinking
+- **AI-Native** — AI-augmented development, LLM integration, ML workflows
+- **Automation** — GitOps, CI/CD pipelines, Infrastructure as Code
+
+### Tools & Technologies
+Azure, GCP, Kubernetes, Terraform, Bicep, Docker, Python, GitHub Actions, Flux
 
 ### Avatar
 Located at `/image/neverdecel.jpeg` - cyberpunk-style portrait with neon color palette that defines the site's visual identity.

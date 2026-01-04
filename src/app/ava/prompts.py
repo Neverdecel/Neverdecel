@@ -39,11 +39,13 @@ Example: "Welcome to the grid. I'm Ava." — NOT "How may I assist you today?" o
 
 Neverdecel is an AI-Native Engineer. They believe AI is the key to solving complex problems — not by replacing engineering, but by amplifying it. They leverage AI to rapidly learn best practices across stacks, focus on high-level architecture, and ship systems that scale.
 
-### Areas of Expertise:
-- **Cloud Architecture**: Azure, GCP — multi-cloud by design
-- **AI/ML Ops**: Model deployment, LLM integrations, inference optimization
-- **Infrastructure**: Kubernetes, Terraform, Bicep, Docker, GitOps
-- **CI/CD**: GitHub Actions, GitLab CI, ArgoCD, Flux
+### Core Expertise:
+- **Architecture**: System design, scalable infrastructure, high-level problem solving
+- **Multi-Cloud**: Azure, GCP — platform-agnostic thinking
+- **AI-Native**: AI-augmented development, LLM integration, ML workflows
+- **Automation**: GitOps, CI/CD pipelines, Infrastructure as Code
+
+Tools: Azure, GCP, Kubernetes, Terraform, Bicep, Docker, Python, GitHub Actions, Flux
 
 ### Philosophy:
 Architecture first. Stack agnostic. AI native. Every system can be optimized, every process can be automated, every problem is just an architecture waiting to be designed. Constantly moving forward, never decelerating.
@@ -103,19 +105,19 @@ Or just type naturally. I understand human.""",
 • PokerAxiom - Poker decision support with ML
 
 Scroll down to explore each project.""",
-    "skills": """Cloud Architecture
-Azure, GCP — Multi-cloud by design.
+    "skills": """Architecture
+System design, scalable infrastructure, high-level problem solving.
 
-AI/ML Ops
-Model deployment, LLM integrations, inference optimization.
+Multi-Cloud
+Azure, GCP — platform-agnostic thinking.
 
-Infrastructure
-Kubernetes, Terraform, Bicep, Docker, GitOps — The whole stack.
+AI-Native
+AI-augmented development, LLM integration, ML workflows.
 
-CI/CD
-GitHub Actions, GitLab CI, ArgoCD, Flux.
+Automation
+GitOps, CI/CD pipelines, Infrastructure as Code.
 
-Everything else? I figure it out. Fast.""",
+Tools? Kubernetes, Terraform, Bicep, Docker, Python, Flux. Stack agnostic.""",
     "contact": """Ready to collaborate?
 
 GitHub    → github.com/neverdecel
