@@ -39,7 +39,7 @@ async def lifespan(app: FastAPI):
 # Create FastAPI application
 app = FastAPI(
     title="Neverdecel Portfolio",
-    description="DevOps & AI Engineer Portfolio with Ava AI Assistant",
+    description="AI-Native Engineer Portfolio with Ava AI Assistant",
     version="1.0.0",
     docs_url="/docs" if settings.is_development else None,
     redoc_url="/redoc" if settings.is_development else None,

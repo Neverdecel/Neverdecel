@@ -2,7 +2,7 @@
 
 ## Project Description
 
-A futuristic, cyberpunk-themed portfolio website for **Neverdecel** - a DevOps & AI Engineer. The site serves as both a personal brand showcase and a living demonstration of technical capabilities.
+A futuristic, cyberpunk-themed portfolio website for **Neverdecel** - an AI-Native Engineer. The site serves as both a personal brand showcase and a living demonstration of technical capabilities.
 
 ### Core Components
 
@@ -93,7 +93,8 @@ The portfolio itself is the proof of work: AI integration, modern web architectu
 
 ## Vision
 
-> **Neverdecel: Constantly moving forward, never decelerating.**
+> **Architecture first. Stack agnostic. AI native.**
+> **Constantly moving forward, never decelerating.**
 
 A portfolio that embodies perpetual motion and growth:
 
@@ -101,7 +102,7 @@ A portfolio that embodies perpetual motion and growth:
 - **AI-Native**: Ava isn't a gimmick—it's a statement that AI is core to how Neverdecel builds
 - **Expertise Demonstrated**: Cloud Architecture, AI/ML Ops, and CI/CD automation visible in how the site itself runs
 
-**Goal**: Become the go-to example of what a DevOps/AI engineer's portfolio should look like in 2025 and beyond.
+**Goal**: Become the go-to example of what an AI-Native Engineer's portfolio should look like in 2025 and beyond.
 
 ---
 
@@ -121,13 +122,20 @@ Visitors should leave:
 ### Name
 **Neverdecel** (anonymous brand identity, no real name displayed)
 
-### Tagline Concept
-*"Constantly moving forward, never decelerating."*
+### Title
+**AI-Native Engineer**
+
+### Tagline
+*"Architecture first. Stack agnostic. AI native. Building the future one system at a time. Constantly moving forward, never decelerating."*
+
+### Philosophy
+> I believe AI is the key to solving complex problems. Not by replacing engineering, but by amplifying it. I leverage AI to rapidly learn best practices across stacks, focus on high-level architecture, and ship systems that scale.
 
 ### Areas of Expertise
-- Cloud Architecture (AWS, GCP, Azure)
+- Cloud Architecture (Azure, GCP)
 - AI/ML Ops (Model deployment, LLM integrations)
-- CI/CD & Automation (GitHub Actions, GitLab CI, ArgoCD)
+- Infrastructure (Kubernetes, Terraform, Bicep, Docker, GitOps)
+- CI/CD & Automation (GitHub Actions, GitLab CI, ArgoCD, Flux)
 
 ### Avatar
 Located at `/image/neverdecel.jpeg` - cyberpunk-style portrait with neon color palette that defines the site's visual identity.

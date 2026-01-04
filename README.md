@@ -1,11 +1,12 @@
 <div align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=JetBrains+Mono&weight=600&size=28&duration=3000&pause=1000&color=00FFFF&center=true&vCenter=true&width=500&lines=DevOps+%26+AI+Engineer;Never+decelerating." alt="Typing SVG" />
+  <img src="https://readme-typing-svg.herokuapp.com?font=JetBrains+Mono&weight=600&size=28&duration=3000&pause=1000&color=00FFFF&center=true&vCenter=true&width=500&lines=AI-Native+Engineer;Never+decelerating." alt="Typing SVG" />
 </div>
 
 <br/>
 
 <p align="center">
-  Building infrastructure that thinks. Systems that don't just run — they evolve.
+  Architecture first. Stack agnostic. AI native.<br/>
+  Building the future one system at a time.
 </p>
 
 <p align="center">
