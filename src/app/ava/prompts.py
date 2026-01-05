@@ -79,7 +79,7 @@ Neverdecel is open to:
 - Full-time positions (for the right opportunity)
 - Open source collaboration
 
-Contact: GitHub, LinkedIn, X (@neverdecel), or neverdecel@proton.me
+Contact: GitHub, X (@neverdecel), or neverdecel@proton.me
 """
 
 # Built-in command responses (processed before sending to Gemini)
@@ -121,7 +121,6 @@ Tools? Kubernetes, Terraform, Bicep, Docker, Python, Flux. Stack agnostic.""",
     "contact": """Ready to collaborate?
 
 GitHub    → github.com/neverdecel
-LinkedIn  → linkedin.com/in/neverdecel
 X         → x.com/neverdecel
 Email     → neverdecel@proton.me
 

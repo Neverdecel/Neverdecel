@@ -33,7 +33,6 @@ Visual design should feel like a mission control dashboard or cyberpunk interfac
 
 Minimal footer integration:
 - GitHub
-- LinkedIn
 - Twitter/X
 - Email
 

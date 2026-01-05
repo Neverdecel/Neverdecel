@@ -13,9 +13,6 @@
   <a href="https://neverdecel.com">
     <img src="https://img.shields.io/badge/Portfolio-neverdecel.com-00ffff?style=flat-square&logo=google-chrome&logoColor=white" alt="Portfolio"/>
   </a>
-  <a href="https://linkedin.com/in/neverdecel">
-    <img src="https://img.shields.io/badge/LinkedIn-neverdecel-0077B5?style=flat-square&logo=linkedin&logoColor=white" alt="LinkedIn"/>
-  </a>
   <a href="https://x.com/neverdecel">
     <img src="https://img.shields.io/badge/X-@neverdecel-000000?style=flat-square&logo=x&logoColor=white" alt="X"/>
   </a>
