@@ -1,6 +1,5 @@
 """Admin routes for analytics dashboard."""
 
-import hashlib
 import os
 import secrets
 from collections.abc import Callable
@@ -13,10 +12,7 @@ from .storage import AnalyticsStorage
 
 router = APIRouter(prefix="/admin/analytics", tags=["analytics"])
 
-# Simple session-based auth
-_sessions: set[str] = set()
-
-# Admin password from env or generate one on first run
+# Admin password from env
 ADMIN_PASSWORD = os.getenv("ANALYTICS_PASSWORD", "")
 
 
@@ -28,7 +24,10 @@ def get_storage(request: Request) -> AnalyticsStorage:
 def _check_auth(request: Request) -> bool:
     """Check if request has valid session."""
     session_id = request.cookies.get("analytics_session")
-    return session_id in _sessions if session_id else False
+    if not session_id:
+        return False
+    storage = get_storage(request)
+    return storage.validate_admin_session(session_id)
 
 
 def require_auth(func: Callable):
@@ -43,45 +42,83 @@ def require_auth(func: Callable):
     return wrapper
 
 
+def _get_client_ip(request: Request) -> str:
+    """Extract client IP from request."""
+    forwarded = request.headers.get("x-forwarded-for")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    if request.client:
+        return request.client.host
+    return "unknown"
+
+
 @router.get("/login", response_class=HTMLResponse)
-async def login_page(request: Request, error: str = ""):
+async def login_page(request: Request, error: str = "", locked: str = ""):
     """Render login page."""
     templates = request.app.state.templates
+    storage = get_storage(request)
+    ip = _get_client_ip(request)
+
+    # Check if locked out
+    is_locked, seconds_remaining = storage.is_ip_locked_out(ip)
+    if is_locked:
+        locked = str(seconds_remaining)
+
+    remaining_attempts = storage.get_remaining_attempts(ip) if not is_locked else 0
+
     return templates.TemplateResponse(
         request=request,
         name="admin/login.html",
-        context={"error": error},
+        context={
+            "error": error,
+            "locked": locked,
+            "remaining_attempts": remaining_attempts,
+        },
     )
 
 
 @router.post("/login")
 async def login(request: Request, password: str = Form(...)):
-    """Process login."""
-    # Hash password for comparison
-    password_hash = hashlib.sha256(password.encode()).hexdigest()
-    expected_hash = hashlib.sha256(ADMIN_PASSWORD.encode()).hexdigest()
+    """Process login with brute force protection."""
+    storage = get_storage(request)
+    ip = _get_client_ip(request)
+
+    # Check if locked out
+    is_locked, seconds_remaining = storage.is_ip_locked_out(ip)
+    if is_locked:
+        return RedirectResponse(
+            url=f"/admin/analytics/login?locked={seconds_remaining}",
+            status_code=302,
+        )
 
     if not ADMIN_PASSWORD:
-        # No password set - show setup instructions
         return RedirectResponse(
             url="/admin/analytics/login?error=Set+ANALYTICS_PASSWORD+env+var",
             status_code=302,
         )
 
-    if not secrets.compare_digest(password_hash, expected_hash):
+    if not secrets.compare_digest(password.encode(), ADMIN_PASSWORD.encode()):
+        # Record failed attempt
+        storage.record_login_attempt(ip, success=False)
+        remaining = storage.get_remaining_attempts(ip)
+
+        if remaining == 0:
+            return RedirectResponse(
+                url="/admin/analytics/login?locked=900",
+                status_code=302,
+            )
+
         return RedirectResponse(
-            url="/admin/analytics/login?error=Invalid+password",
+            url=f"/admin/analytics/login?error=Invalid+password.+{remaining}+attempts+remaining.",
             status_code=302,
         )
 
-    # Create session
-    session_id = secrets.token_urlsafe(32)
-    _sessions.add(session_id)
+    # Record successful attempt (clears the failed count effectively)
+    storage.record_login_attempt(ip, success=True)
 
-    # Limit sessions
-    if len(_sessions) > 100:
-        # Remove oldest
-        _sessions.pop()
+    # Create session in persistent storage
+    session_id = secrets.token_urlsafe(32)
+    storage.create_admin_session(session_id, expires_hours=24)
 
     response = RedirectResponse(url="/admin/analytics", status_code=302)
     response.set_cookie(
@@ -99,8 +136,9 @@ async def login(request: Request, password: str = Form(...)):
 async def logout(request: Request):
     """Log out and clear session."""
     session_id = request.cookies.get("analytics_session")
-    if session_id and session_id in _sessions:
-        _sessions.discard(session_id)
+    if session_id:
+        storage = get_storage(request)
+        storage.delete_admin_session(session_id)
 
     response = RedirectResponse(url="/admin/analytics/login", status_code=302)
     response.delete_cookie("analytics_session")
@@ -120,6 +158,8 @@ async def dashboard(
     # Get stats
     stats = storage.get_stats(days=days)
     recent = storage.get_recent_visitors(limit=30)
+    tile_clicks = storage.get_tile_clicks(days=days)
+    outbound_clicks = storage.get_outbound_clicks(days=days)
 
     return templates.TemplateResponse(
         request=request,
@@ -127,6 +167,8 @@ async def dashboard(
         context={
             "stats": stats,
             "recent": recent,
+            "tile_clicks": tile_clicks,
+            "outbound_clicks": outbound_clicks,
             "days": days,
         },
     )
@@ -154,32 +196,72 @@ async def api_recent(
     return storage.get_recent_visitors(limit=limit)
 
 
+@router.get("/visitors", response_class=HTMLResponse)
+@require_auth
+async def visitors_list(
+    request: Request,
+    days: int = 30,
+    storage: AnalyticsStorage = Depends(get_storage),
+):
+    """Render visitors list page."""
+    templates = request.app.state.templates
+    visitors = storage.get_all_visitors(days=days)
+
+    return templates.TemplateResponse(
+        request=request,
+        name="admin/visitors.html",
+        context={"visitors": visitors, "days": days},
+    )
+
+
+@router.get("/visitor/{visitor_id:path}", response_class=HTMLResponse)
+@require_auth
+async def visitor_detail(
+    request: Request,
+    visitor_id: str,
+    storage: AnalyticsStorage = Depends(get_storage),
+):
+    """Render individual visitor detail page."""
+    templates = request.app.state.templates
+    details = storage.get_visitor_details(visitor_id)
+
+    return templates.TemplateResponse(
+        request=request,
+        name="admin/visitor_detail.html",
+        context={"visitor": details},
+    )
+
+
 @router.post("/api/event")
 async def track_event(
     request: Request,
     event: str = Form(...),
     path: str = Form(None),
+    metadata: str = Form(None),
     storage: AnalyticsStorage = Depends(get_storage),
 ):
     """Track a custom event from the frontend."""
-    # Get visitor hash
+    import contextlib
+    import json
+
+    # Get visitor IP
     forwarded = request.headers.get("x-forwarded-for")
     if forwarded:
         ip = forwarded.split(",")[0].strip()
     else:
         ip = request.client.host if request.client else "unknown"
 
-    # Create visitor hash (must match middleware logic)
-    from datetime import datetime
-
-    today = datetime.utcnow().strftime("%Y-%m-%d")
-    salt = hashlib.sha256(f"neverdecel-{today}-secret".encode()).hexdigest()
-    visitor_hash = hashlib.sha256(f"{ip}-{salt}".encode()).hexdigest()[:16]
+    # Parse metadata if provided
+    meta_dict = None
+    if metadata:
+        with contextlib.suppress(json.JSONDecodeError):
+            meta_dict = json.loads(metadata)
 
     storage.record_event(
         event_name=event,
-        visitor_hash=visitor_hash,
+        visitor_id=ip,
         path=path,
+        metadata=meta_dict,
     )
 
     return {"status": "ok"}

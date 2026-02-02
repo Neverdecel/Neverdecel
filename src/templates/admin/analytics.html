@@ -5,40 +5,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analytics Dashboard</title>
     <meta name="robots" content="noindex, nofollow">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'void': '#050508',
+                        'primary': '#0a0a0f',
+                        'surface': '#1a1a2e',
+                        'elevated': '#252542',
+                        'neon-magenta': '#ff00ff',
+                        'neon-cyan': '#00ffff',
+                        'neon-purple': '#8b5cf6',
+                        'text-primary': '#f0f0f0',
+                        'text-secondary': '#b0b0b0',
+                        'text-muted': '#666666',
+                        'terminal-green': '#39ff14',
+                        'terminal-amber': '#ffb000',
+                        'terminal-red': '#ff3366',
+                    },
+                    fontFamily: {
+                        'display': ['JetBrains Mono', 'monospace'],
+                        'body': ['Inter', 'sans-serif'],
+                        'terminal': ['Fira Code', 'monospace'],
+                    },
+                },
+            },
+        }
+    </script>
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        * { scrollbar-width: thin; scrollbar-color: #00ffff #1a1a2e; }
+        *::-webkit-scrollbar { width: 6px; }
+        *::-webkit-scrollbar-track { background: #1a1a2e; }
+        *::-webkit-scrollbar-thumb { background: #00ffff; border-radius: 3px; }
+        .card { background: linear-gradient(135deg, #1a1a2e 0%, rgba(26, 26, 46, 0.8) 100%); border: 1px solid rgba(255,255,255,0.1); }
+        .card:hover { border-color: rgba(139, 92, 246, 0.5); }
+        .stat-glow { text-shadow: 0 0 20px currentColor; }
     </style>
 </head>
-<body class="bg-gray-950 text-gray-100 min-h-screen">
+<body class="bg-void text-text-primary font-body min-h-screen">
     <!-- Header -->
-    <header class="border-b border-gray-800 bg-gray-900/50 sticky top-0 z-50 backdrop-blur">
+    <header class="border-b border-white/10 bg-primary/80 backdrop-blur sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
             <div class="flex items-center gap-4">
-                <h1 class="text-xl font-bold text-cyan-400 font-mono">Analytics</h1>
-                <span class="text-gray-500 text-sm">neverdecel.com</span>
+                <h1 class="font-display font-bold text-xl">
+                    <span class="text-neon-magenta">*</span>
+                    <span class="text-neon-cyan">Analytics</span>
+                </h1>
+                <span class="text-text-muted text-sm font-terminal">// neverdecel.com</span>
             </div>
-            <div class="flex items-center gap-4">
-                <!-- Time range selector -->
-                <select
-                    id="days-select"
-                    onchange="window.location.href='?days=' + this.value"
-                    class="bg-gray-800 border border-gray-700 rounded px-3 py-1.5 text-sm
-                           focus:outline-none focus:border-cyan-500"
-                >
-                    <option value="7" {% if days == 7 %}selected{% endif %}>Last 7 days</option>
-                    <option value="30" {% if days == 30 %}selected{% endif %}>Last 30 days</option>
-                    <option value="90" {% if days == 90 %}selected{% endif %}>Last 90 days</option>
-                    <option value="365" {% if days == 365 %}selected{% endif %}>Last year</option>
+            <div class="flex items-center gap-3">
+                <a href="/admin/analytics/visitors?days={{ days }}"
+                   class="px-3 py-1.5 bg-surface border border-neon-purple/30 rounded text-sm font-terminal
+                          text-neon-purple hover:border-neon-purple hover:bg-neon-purple/10 transition-all">
+                    All Visitors
+                </a>
+                <select onchange="window.location.href='?days=' + this.value"
+                        class="bg-surface border border-white/10 rounded px-3 py-1.5 text-sm font-terminal
+                               focus:outline-none focus:border-neon-cyan">
+                    <option value="7" {% if days == 7 %}selected{% endif %}>7 days</option>
+                    <option value="30" {% if days == 30 %}selected{% endif %}>30 days</option>
+                    <option value="90" {% if days == 90 %}selected{% endif %}>90 days</option>
+                    <option value="365" {% if days == 365 %}selected{% endif %}>1 year</option>
                 </select>
-                <a href="/admin/analytics/logout"
-                   class="text-gray-400 hover:text-white text-sm transition-colors">
-                    Logout
+                <a href="/admin/analytics/logout" class="text-text-muted hover:text-terminal-red text-sm font-terminal transition-colors">
+                    logout
                 </a>
             </div>
         </div>
@@ -48,241 +84,250 @@
         <!-- Live indicator -->
         <div class="flex items-center gap-2 mb-6">
             <span class="relative flex h-3 w-3">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-terminal-green opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-terminal-green"></span>
             </span>
-            <span class="text-green-400 text-sm font-mono">
-                {{ stats.live_visitors }} visitor{% if stats.live_visitors != 1 %}s{% endif %} now
+            <span class="text-terminal-green text-sm font-terminal">
+                {{ stats.live_visitors }} active now
             </span>
         </div>
 
         <!-- Key metrics -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
-                <div class="text-gray-400 text-sm mb-1">Pageviews</div>
-                <div class="text-3xl font-bold text-white font-mono">{{ "{:,}".format(stats.total_pageviews) }}</div>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="card rounded-lg p-5">
+                <div class="text-text-muted text-xs font-terminal uppercase tracking-wider mb-2">Pageviews</div>
+                <div class="text-3xl font-display font-bold text-text-primary">{{ "{:,}".format(stats.total_pageviews) }}</div>
             </div>
-            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
-                <div class="text-gray-400 text-sm mb-1">Unique Visitors</div>
-                <div class="text-3xl font-bold text-cyan-400 font-mono">{{ "{:,}".format(stats.unique_visitors) }}</div>
+            <a href="/admin/analytics/visitors?days={{ days }}" class="card rounded-lg p-5 group">
+                <div class="text-text-muted text-xs font-terminal uppercase tracking-wider mb-2">Unique Visitors</div>
+                <div class="text-3xl font-display font-bold text-neon-cyan stat-glow">{{ "{:,}".format(stats.unique_visitors) }}</div>
+                <div class="text-text-muted text-xs mt-1 group-hover:text-neon-cyan transition-colors">View all &rarr;</div>
+            </a>
+            <div class="card rounded-lg p-5">
+                <div class="text-text-muted text-xs font-terminal uppercase tracking-wider mb-2">Sessions</div>
+                <div class="text-3xl font-display font-bold text-text-primary">{{ "{:,}".format(stats.total_sessions) }}</div>
             </div>
-            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
-                <div class="text-gray-400 text-sm mb-1">Sessions</div>
-                <div class="text-3xl font-bold text-white font-mono">{{ "{:,}".format(stats.total_sessions) }}</div>
-            </div>
-            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
-                <div class="text-gray-400 text-sm mb-1">Pages/Session</div>
-                <div class="text-3xl font-bold text-white font-mono">{{ stats.avg_pages_per_session }}</div>
-            </div>
-        </div>
-
-        <!-- Charts row -->
-        <div class="grid md:grid-cols-2 gap-6 mb-8">
-            <!-- Visitors over time -->
-            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
-                <h2 class="text-lg font-semibold mb-4">Visitors</h2>
-                <canvas id="visitors-chart" height="200"></canvas>
-            </div>
-
-            <!-- Pageviews over time -->
-            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
-                <h2 class="text-lg font-semibold mb-4">Pageviews</h2>
-                <canvas id="pageviews-chart" height="200"></canvas>
+            <div class="card rounded-lg p-5">
+                <div class="text-text-muted text-xs font-terminal uppercase tracking-wider mb-2">Pages/Session</div>
+                <div class="text-3xl font-display font-bold text-neon-purple">{{ stats.avg_pages_per_session }}</div>
             </div>
         </div>
 
-        <!-- Data tables -->
-        <div class="grid md:grid-cols-3 gap-6 mb-8">
+        <!-- Charts -->
+        <div class="grid lg:grid-cols-2 gap-6 mb-8">
+            <div class="card rounded-lg p-5">
+                <h2 class="text-sm font-terminal text-text-secondary mb-4">Visitors Over Time</h2>
+                <canvas id="visitors-chart" height="180"></canvas>
+            </div>
+            <div class="card rounded-lg p-5">
+                <h2 class="text-sm font-terminal text-text-secondary mb-4">Pageviews Over Time</h2>
+                <canvas id="pageviews-chart" height="180"></canvas>
+            </div>
+        </div>
+
+        <!-- Data grid -->
+        <div class="grid lg:grid-cols-3 gap-6 mb-8">
             <!-- Top pages -->
-            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
-                <h2 class="text-lg font-semibold mb-4">Top Pages</h2>
+            <div class="card rounded-lg p-5">
+                <h2 class="text-sm font-terminal text-neon-cyan mb-4">Top Pages</h2>
                 <div class="space-y-2">
                     {% for page in stats.top_pages %}
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300 truncate font-mono text-sm" title="{{ page.path }}">
-                            {{ page.path }}
-                        </span>
-                        <span class="text-cyan-400 font-mono text-sm ml-2">{{ page.views }}</span>
+                        <span class="text-text-secondary text-sm font-terminal truncate mr-2">{{ page.path }}</span>
+                        <span class="text-neon-cyan font-terminal text-sm">{{ page.views }}</span>
                     </div>
+                    {% else %}
+                    <p class="text-text-muted text-sm">No data</p>
                     {% endfor %}
                 </div>
             </div>
 
-            <!-- Top referrers -->
-            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
-                <h2 class="text-lg font-semibold mb-4">Referrers</h2>
+            <!-- Referrers -->
+            <div class="card rounded-lg p-5">
+                <h2 class="text-sm font-terminal text-neon-magenta mb-4">Referrers</h2>
                 <div class="space-y-2">
                     {% for ref in stats.top_referrers %}
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300 truncate text-sm" title="{{ ref.referrer }}">
-                            {{ ref.referrer }}
-                        </span>
-                        <span class="text-cyan-400 font-mono text-sm ml-2">{{ ref.count }}</span>
+                        <span class="text-text-secondary text-sm truncate mr-2">{{ ref.referrer }}</span>
+                        <span class="text-neon-magenta font-terminal text-sm">{{ ref.count }}</span>
                     </div>
                     {% else %}
-                    <p class="text-gray-500 text-sm">No referrers yet</p>
+                    <p class="text-text-muted text-sm">No referrers</p>
                     {% endfor %}
                 </div>
             </div>
 
             <!-- Countries -->
-            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
-                <h2 class="text-lg font-semibold mb-4">Countries</h2>
+            <div class="card rounded-lg p-5">
+                <h2 class="text-sm font-terminal text-neon-purple mb-4">Countries</h2>
                 <div class="space-y-2">
                     {% for c in stats.countries %}
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300 text-sm">{{ c.country }}</span>
-                        <span class="text-cyan-400 font-mono text-sm">{{ c.count }}</span>
+                        <span class="text-text-secondary text-sm">{{ c.country }}</span>
+                        <span class="text-neon-purple font-terminal text-sm">{{ c.count }}</span>
                     </div>
                     {% else %}
-                    <p class="text-gray-500 text-sm">No data yet</p>
+                    <p class="text-text-muted text-sm">No data</p>
                     {% endfor %}
                 </div>
             </div>
         </div>
 
-        <!-- Second row of tables -->
-        <div class="grid md:grid-cols-3 gap-6 mb-8">
-            <!-- Browsers -->
-            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
-                <h2 class="text-lg font-semibold mb-4">Browsers</h2>
+        <!-- Project clicks & Outbound -->
+        <div class="grid lg:grid-cols-2 gap-6 mb-8">
+            <div class="card rounded-lg p-5">
+                <h2 class="text-sm font-terminal text-terminal-green mb-4">Project Clicks</h2>
+                <div class="space-y-2">
+                    {% for t in tile_clicks %}
+                    <div class="flex justify-between items-center">
+                        <span class="text-text-secondary text-sm">{{ t.project }}</span>
+                        <span class="text-terminal-green font-terminal text-sm">{{ t.count }}</span>
+                    </div>
+                    {% else %}
+                    <p class="text-text-muted text-sm">No project clicks yet</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="card rounded-lg p-5">
+                <h2 class="text-sm font-terminal text-terminal-amber mb-4">Outbound Clicks</h2>
+                <div class="space-y-2">
+                    {% for o in outbound_clicks %}
+                    <div class="flex justify-between items-center">
+                        <span class="text-text-secondary text-sm truncate mr-2" title="{{ o.url }}">{{ o.text or o.url }}</span>
+                        <span class="text-terminal-amber font-terminal text-sm">{{ o.count }}</span>
+                    </div>
+                    {% else %}
+                    <p class="text-text-muted text-sm">No outbound clicks yet</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- UTM & Browsers -->
+        <div class="grid lg:grid-cols-3 gap-6 mb-8">
+            <div class="card rounded-lg p-5">
+                <h2 class="text-sm font-terminal text-terminal-amber mb-4">UTM Sources</h2>
+                <div class="space-y-2">
+                    {% for u in stats.utm_sources %}
+                    <div class="flex justify-between items-center">
+                        <span class="text-text-secondary text-sm">{{ u.source }}</span>
+                        <span class="text-terminal-amber font-terminal text-sm">{{ u.count }}</span>
+                    </div>
+                    {% else %}
+                    <p class="text-text-muted text-sm">No UTM sources</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="card rounded-lg p-5">
+                <h2 class="text-sm font-terminal text-text-secondary mb-4">Browsers</h2>
                 <div class="space-y-2">
                     {% for b in stats.browsers %}
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300 text-sm">{{ b.browser }}</span>
-                        <span class="text-cyan-400 font-mono text-sm">{{ b.count }}</span>
+                        <span class="text-text-secondary text-sm">{{ b.browser }}</span>
+                        <span class="text-text-primary font-terminal text-sm">{{ b.count }}</span>
                     </div>
                     {% else %}
-                    <p class="text-gray-500 text-sm">No data yet</p>
+                    <p class="text-text-muted text-sm">No data</p>
                     {% endfor %}
                 </div>
             </div>
 
-            <!-- Operating systems -->
-            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
-                <h2 class="text-lg font-semibold mb-4">Operating Systems</h2>
-                <div class="space-y-2">
-                    {% for o in stats.operating_systems %}
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-300 text-sm">{{ o.os }}</span>
-                        <span class="text-cyan-400 font-mono text-sm">{{ o.count }}</span>
-                    </div>
-                    {% else %}
-                    <p class="text-gray-500 text-sm">No data yet</p>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <!-- Devices -->
-            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
-                <h2 class="text-lg font-semibold mb-4">Devices</h2>
+            <div class="card rounded-lg p-5">
+                <h2 class="text-sm font-terminal text-text-secondary mb-4">Devices</h2>
                 <div class="space-y-2">
                     {% for d in stats.device_types %}
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300 text-sm capitalize">{{ d.device }}</span>
-                        <span class="text-cyan-400 font-mono text-sm">{{ d.count }}</span>
+                        <span class="text-text-secondary text-sm capitalize">{{ d.device }}</span>
+                        <span class="text-text-primary font-terminal text-sm">{{ d.count }}</span>
                     </div>
                     {% else %}
-                    <p class="text-gray-500 text-sm">No data yet</p>
+                    <p class="text-text-muted text-sm">No data</p>
                     {% endfor %}
                 </div>
             </div>
         </div>
 
-        <!-- Events & Bots -->
-        <div class="grid md:grid-cols-2 gap-6 mb-8">
-            <!-- Events -->
-            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
-                <h2 class="text-lg font-semibold mb-4">Events</h2>
-                <div class="space-y-2">
-                    {% for e in stats.events %}
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-300 font-mono text-sm">{{ e.event }}</span>
-                        <span class="text-cyan-400 font-mono text-sm">{{ e.count }}</span>
-                    </div>
-                    {% else %}
-                    <p class="text-gray-500 text-sm">No events tracked yet</p>
-                    {% endfor %}
+        <!-- Full referrer URLs -->
+        <div class="card rounded-lg p-5 mb-8">
+            <h2 class="text-sm font-terminal text-text-secondary mb-4">Full Referrer URLs</h2>
+            <div class="space-y-2 max-h-48 overflow-y-auto">
+                {% for r in stats.referrer_urls %}
+                <div class="flex justify-between items-center">
+                    <a href="{{ r.url }}" target="_blank" rel="noopener"
+                       class="text-text-secondary text-sm truncate hover:text-neon-cyan transition-colors mr-2"
+                       title="{{ r.url }}">{{ r.url }}</a>
+                    <span class="text-neon-cyan font-terminal text-sm">{{ r.count }}</span>
                 </div>
-            </div>
-
-            <!-- Bot traffic -->
-            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
-                <h2 class="text-lg font-semibold mb-4">Bot Traffic</h2>
-                <div class="text-3xl font-bold text-orange-400 font-mono mb-2">
-                    {{ "{:,}".format(stats.bot_requests) }}
-                </div>
-                <p class="text-gray-500 text-sm">
-                    requests from bots/crawlers (excluded from stats)
-                </p>
+                {% else %}
+                <p class="text-text-muted text-sm">No referrers</p>
+                {% endfor %}
             </div>
         </div>
 
-        <!-- Recent visitors -->
-        <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
-            <h2 class="text-lg font-semibold mb-4">Recent Visitors</h2>
+        <!-- Recent Activity -->
+        <div class="card rounded-lg p-5">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-sm font-terminal text-text-secondary">Recent Activity</h2>
+                <a href="/admin/analytics/visitors?days={{ days }}" class="text-neon-cyan text-sm font-terminal hover:underline">
+                    View all &rarr;
+                </a>
+            </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead>
-                        <tr class="text-gray-400 text-left border-b border-gray-800">
-                            <th class="pb-2 font-medium">Time</th>
-                            <th class="pb-2 font-medium">Page</th>
-                            <th class="pb-2 font-medium">Location</th>
-                            <th class="pb-2 font-medium">Browser</th>
-                            <th class="pb-2 font-medium">Device</th>
-                            <th class="pb-2 font-medium">Referrer</th>
+                        <tr class="text-text-muted text-left border-b border-white/10">
+                            <th class="pb-3 font-terminal font-normal">Time</th>
+                            <th class="pb-3 font-terminal font-normal">Visitor</th>
+                            <th class="pb-3 font-terminal font-normal">Page</th>
+                            <th class="pb-3 font-terminal font-normal">Location</th>
+                            <th class="pb-3 font-terminal font-normal">Source</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-800">
+                    <tbody class="divide-y divide-white/5">
                         {% for v in recent %}
-                        <tr class="text-gray-300">
-                            <td class="py-2 font-mono text-xs text-gray-500">
-                                {{ v.timestamp[:16].replace('T', ' ') }}
+                        <tr class="hover:bg-white/5 cursor-pointer transition-colors"
+                            onclick="window.location.href='/admin/analytics/visitor/{{ v.visitor_id | urlencode }}'">
+                            <td class="py-3 font-terminal text-xs text-text-muted">{{ v.timestamp[:16].replace('T', ' ') }}</td>
+                            <td class="py-3 font-terminal text-xs text-neon-cyan">{{ v.visitor_id[:20] }}...</td>
+                            <td class="py-3 font-terminal text-text-secondary truncate max-w-[100px]">{{ v.path }}</td>
+                            <td class="py-3 text-text-secondary">
+                                {% if v.country %}{{ v.country }}{% else %}-{% endif %}
                             </td>
-                            <td class="py-2 font-mono truncate max-w-[150px]" title="{{ v.path }}">
-                                {{ v.path }}
-                            </td>
-                            <td class="py-2">
-                                {% if v.city and v.country %}
-                                {{ v.city }}, {{ v.country }}
-                                {% elif v.country %}
-                                {{ v.country }}
-                                {% else %}
-                                <span class="text-gray-600">-</span>
-                                {% endif %}
-                            </td>
-                            <td class="py-2">{{ v.browser or '-' }}</td>
-                            <td class="py-2 capitalize">{{ v.device_type or '-' }}</td>
-                            <td class="py-2 truncate max-w-[120px]" title="{{ v.referrer or '' }}">
-                                {{ v.referrer or '-' }}
-                            </td>
+                            <td class="py-3 text-text-muted truncate max-w-[100px]">{{ v.referrer or 'Direct' }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
+
+        <!-- Bot traffic -->
+        <div class="mt-8 text-center">
+            <span class="text-text-muted text-sm font-terminal">
+                {{ "{:,}".format(stats.bot_requests) }} bot requests filtered
+            </span>
+        </div>
     </main>
 
-    <!-- Charts initialization -->
     <script>
-        // Chart.js config
-        Chart.defaults.color = '#9ca3af';
-        Chart.defaults.borderColor = '#374151';
+        Chart.defaults.color = '#666666';
+        Chart.defaults.borderColor = 'rgba(255,255,255,0.1)';
 
-        // Visitors chart
-        const visitorsCtx = document.getElementById('visitors-chart').getContext('2d');
-        new Chart(visitorsCtx, {
+        new Chart(document.getElementById('visitors-chart'), {
             type: 'line',
             data: {
                 labels: {{ stats.visitors_over_time | map(attribute='date') | list | tojson }},
                 datasets: [{
                     label: 'Visitors',
                     data: {{ stats.visitors_over_time | map(attribute='visitors') | list | tojson }},
-                    borderColor: '#06b6d4',
-                    backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                    borderColor: '#00ffff',
+                    backgroundColor: 'rgba(0, 255, 255, 0.1)',
                     fill: true,
-                    tension: 0.3,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    pointHoverRadius: 4,
                 }]
             },
             options: {
@@ -290,24 +335,23 @@
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
-                    y: { beginAtZero: true, grid: { color: '#1f2937' } },
+                    y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } },
                     x: { grid: { display: false } }
                 }
             }
         });
 
-        // Pageviews chart
-        const pageviewsCtx = document.getElementById('pageviews-chart').getContext('2d');
-        new Chart(pageviewsCtx, {
+        new Chart(document.getElementById('pageviews-chart'), {
             type: 'bar',
             data: {
                 labels: {{ stats.pageviews_over_time | map(attribute='date') | list | tojson }},
                 datasets: [{
                     label: 'Pageviews',
                     data: {{ stats.pageviews_over_time | map(attribute='views') | list | tojson }},
-                    backgroundColor: 'rgba(6, 182, 212, 0.5)',
-                    borderColor: '#06b6d4',
+                    backgroundColor: 'rgba(139, 92, 246, 0.5)',
+                    borderColor: '#8b5cf6',
                     borderWidth: 1,
+                    borderRadius: 4,
                 }]
             },
             options: {
@@ -315,13 +359,13 @@
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
-                    y: { beginAtZero: true, grid: { color: '#1f2937' } },
+                    y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } },
                     x: { grid: { display: false } }
                 }
             }
         });
 
-        // Auto-refresh every 60 seconds
+        // Auto-refresh
         setTimeout(() => location.reload(), 60000);
     </script>
 </body>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Visitors - Analytics</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'void': '#050508',
+                        'primary': '#0a0a0f',
+                        'surface': '#1a1a2e',
+                        'elevated': '#252542',
+                        'neon-magenta': '#ff00ff',
+                        'neon-cyan': '#00ffff',
+                        'neon-purple': '#8b5cf6',
+                        'text-primary': '#f0f0f0',
+                        'text-secondary': '#b0b0b0',
+                        'text-muted': '#666666',
+                        'terminal-green': '#39ff14',
+                        'terminal-amber': '#ffb000',
+                        'terminal-red': '#ff3366',
+                    },
+                    fontFamily: {
+                        'display': ['JetBrains Mono', 'monospace'],
+                        'body': ['Inter', 'sans-serif'],
+                        'terminal': ['Fira Code', 'monospace'],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        * { scrollbar-width: thin; scrollbar-color: #00ffff #1a1a2e; }
+        *::-webkit-scrollbar { width: 6px; }
+        *::-webkit-scrollbar-track { background: #1a1a2e; }
+        *::-webkit-scrollbar-thumb { background: #00ffff; border-radius: 3px; }
+        .card { background: linear-gradient(135deg, #1a1a2e 0%, rgba(26, 26, 46, 0.8) 100%); border: 1px solid rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body class="bg-void text-text-primary font-body min-h-screen">
+    <!-- Header -->
+    <header class="border-b border-white/10 bg-primary/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <a href="/admin/analytics" class="text-text-muted hover:text-neon-cyan transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                </a>
+                <h1 class="font-display font-bold text-xl">
+                    <span class="text-neon-magenta">*</span>
+                    <span class="text-neon-cyan">Visitors</span>
+                </h1>
+                <span class="text-text-muted text-sm font-terminal">// {{ visitors|length }} unique</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <select onchange="window.location.href='?days=' + this.value"
+                        class="bg-surface border border-white/10 rounded px-3 py-1.5 text-sm font-terminal
+                               focus:outline-none focus:border-neon-cyan">
+                    <option value="7" {% if days == 7 %}selected{% endif %}>7 days</option>
+                    <option value="30" {% if days == 30 %}selected{% endif %}>30 days</option>
+                    <option value="90" {% if days == 90 %}selected{% endif %}>90 days</option>
+                </select>
+                <a href="/admin/analytics/logout" class="text-text-muted hover:text-terminal-red text-sm font-terminal transition-colors">
+                    logout
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <div class="card rounded-lg overflow-hidden">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="text-text-muted text-left border-b border-white/10 bg-primary/50">
+                        <th class="px-4 py-3 font-terminal font-normal">Visitor</th>
+                        <th class="px-4 py-3 font-terminal font-normal">Location</th>
+                        <th class="px-4 py-3 font-terminal font-normal">Device</th>
+                        <th class="px-4 py-3 font-terminal font-normal">Source</th>
+                        <th class="px-4 py-3 font-terminal font-normal text-right">Pages</th>
+                        <th class="px-4 py-3 font-terminal font-normal">First Seen</th>
+                        <th class="px-4 py-3 font-terminal font-normal">Last Seen</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-white/5">
+                    {% for v in visitors %}
+                    <tr class="hover:bg-white/5 cursor-pointer transition-colors"
+                        onclick="window.location.href='/admin/analytics/visitor/{{ v.visitor_id | urlencode }}'">
+                        <td class="px-4 py-3">
+                            <div class="font-terminal text-xs text-neon-cyan">{{ v.visitor_id }}</div>
+                        </td>
+                        <td class="px-4 py-3">
+                            {% if v.city and v.country %}
+                            <span class="text-text-secondary">{{ v.city }}, {{ v.country }}</span>
+                            {% elif v.country %}
+                            <span class="text-text-secondary">{{ v.country }}</span>
+                            {% else %}
+                            <span class="text-text-muted">Unknown</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-4 py-3">
+                            <span class="text-text-secondary">{{ v.browser or '-' }}</span>
+                            <span class="text-text-muted text-xs ml-1">{{ v.os or '' }}</span>
+                        </td>
+                        <td class="px-4 py-3">
+                            {% if v.utm_source %}
+                            <span class="px-2 py-0.5 bg-terminal-amber/20 text-terminal-amber rounded text-xs font-terminal">{{ v.utm_source }}</span>
+                            {% elif v.referrer %}
+                            <span class="text-text-muted text-xs truncate max-w-[150px] block">{{ v.referrer }}</span>
+                            {% else %}
+                            <span class="text-text-muted">Direct</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-4 py-3 text-right">
+                            <span class="font-terminal text-terminal-green">{{ v.pageviews }}</span>
+                            <span class="text-text-muted text-xs">/ {{ v.unique_pages }}</span>
+                        </td>
+                        <td class="px-4 py-3 font-terminal text-xs text-text-muted">
+                            {{ v.first_seen[:16].replace('T', ' ') }}
+                        </td>
+                        <td class="px-4 py-3 font-terminal text-xs text-text-muted">
+                            {{ v.last_seen[:16].replace('T', ' ') }}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" class="px-4 py-8 text-center text-text-muted">
+                            No visitors yet
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>
+</html>

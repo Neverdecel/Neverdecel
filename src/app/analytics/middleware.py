@@ -1,9 +1,7 @@
 """Analytics tracking middleware for FastAPI."""
 
-import hashlib
 import logging
 import time
-from datetime import datetime
 
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
@@ -37,18 +35,6 @@ class AnalyticsMiddleware(BaseHTTPMiddleware):
     def __init__(self, app, storage: AnalyticsStorage | None = None):
         super().__init__(app)
         self.storage = storage or AnalyticsStorage()
-        # Daily rotating salt for visitor hashing
-        self._salt_date: str = ""
-        self._salt: str = ""
-
-    def _get_salt(self) -> str:
-        """Get daily rotating salt for visitor hashing."""
-        today = datetime.utcnow().strftime("%Y-%m-%d")
-        if today != self._salt_date:
-            # Generate new salt for the day
-            self._salt = hashlib.sha256(f"neverdecel-{today}-secret".encode()).hexdigest()
-            self._salt_date = today
-        return self._salt
 
     def _get_client_ip(self, request: Request) -> str:
         """Extract real client IP from request."""
@@ -71,12 +57,6 @@ class AnalyticsMiddleware(BaseHTTPMiddleware):
             return request.client.host
 
         return "unknown"
-
-    def _hash_visitor(self, ip: str) -> str:
-        """Create a privacy-safe visitor hash."""
-        salt = self._get_salt()
-        raw = f"{ip}-{salt}"
-        return hashlib.sha256(raw.encode()).hexdigest()[:16]
 
     def _should_track(self, request: Request) -> bool:
         """Determine if this request should be tracked."""
@@ -110,7 +90,6 @@ class AnalyticsMiddleware(BaseHTTPMiddleware):
         # Extract request info
         try:
             ip = self._get_client_ip(request)
-            visitor_hash = self._hash_visitor(ip)
             user_agent = request.headers.get("user-agent", "")
             referrer = request.headers.get("referer")  # Note: HTTP uses "referer"
             path = request.url.path
@@ -118,17 +97,23 @@ class AnalyticsMiddleware(BaseHTTPMiddleware):
             # Parse user agent
             parsed_ua = parse_user_agent(user_agent)
 
-            # Extract referrer domain
+            # Extract referrer domain and filter self-referrals
             referrer_domain = extract_domain(referrer) if referrer else None
-            # Don't track self-referrals
             if referrer_domain and "neverdecel" in referrer_domain:
+                referrer = None
                 referrer_domain = None
 
-            # Geo lookup (async, but we don't await to avoid blocking)
-            # For now, do a quick sync-ish lookup or skip
+            # Extract UTM parameters
+            query_params = dict(request.query_params)
+            utm_source = query_params.get("utm_source")
+            utm_medium = query_params.get("utm_medium")
+            utm_campaign = query_params.get("utm_campaign")
+            utm_content = query_params.get("utm_content")
+            utm_term = query_params.get("utm_term")
+
+            # Geo lookup
             geo = None
             try:
-                # Use app's shared HTTP client if available
                 http_client = getattr(request.app.state, "http_client", None)
                 geo = await lookup_ip(ip, http_client)
             except Exception as e:
@@ -137,9 +122,9 @@ class AnalyticsMiddleware(BaseHTTPMiddleware):
             # Record pageview
             self.storage.record_pageview(
                 path=path,
-                visitor_hash=visitor_hash,
-                ip_address=ip,  # Store for debugging, can remove for stricter privacy
-                referrer=referrer_domain,
+                visitor_id=ip,
+                referrer=referrer,
+                referrer_domain=referrer_domain,
                 country=geo.country if geo else None,
                 city=geo.city if geo else None,
                 user_agent=user_agent[:500],  # Truncate long UAs
@@ -150,6 +135,11 @@ class AnalyticsMiddleware(BaseHTTPMiddleware):
                 is_bot=parsed_ua.is_bot,
                 response_time_ms=response_time_ms,
                 status_code=response.status_code,
+                utm_source=utm_source,
+                utm_medium=utm_medium,
+                utm_campaign=utm_campaign,
+                utm_content=utm_content,
+                utm_term=utm_term,
             )
 
         except Exception as e:

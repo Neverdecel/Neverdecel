@@ -141,13 +141,37 @@ document.addEventListener('DOMContentLoaded', function() {
     // Analytics Event Tracking
     // =========================================
 
-    function trackEvent(eventName) {
+    function trackEvent(eventName, metadata = null) {
         // Fire and forget - don't block UI
         const data = new FormData();
         data.append('event', eventName);
         data.append('path', window.location.pathname);
+        if (metadata) {
+            data.append('metadata', JSON.stringify(metadata));
+        }
         navigator.sendBeacon('/admin/analytics/api/event', data);
     }
+
+    // Track project tile clicks
+    document.querySelectorAll('.project-card').forEach(card => {
+        card.addEventListener('click', function(e) {
+            const projectName = this.querySelector('h4')?.textContent?.trim() || 'unknown';
+            trackEvent('tile_click', { project: projectName });
+        });
+    });
+
+    // Track outbound link clicks
+    document.querySelectorAll('a[href^="http"]').forEach(link => {
+        // Skip internal links
+        if (link.hostname === window.location.hostname) return;
+
+        link.addEventListener('click', function() {
+            trackEvent('outbound_click', {
+                url: this.href,
+                text: this.textContent?.trim()?.substring(0, 100) || ''
+            });
+        });
+    });
 
     // =========================================
     // Form Submission Handling
