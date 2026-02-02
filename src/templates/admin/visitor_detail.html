@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visitor Details - Analytics</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'void': '#050508',
+                        'primary': '#0a0a0f',
+                        'surface': '#1a1a2e',
+                        'elevated': '#252542',
+                        'neon-magenta': '#ff00ff',
+                        'neon-cyan': '#00ffff',
+                        'neon-purple': '#8b5cf6',
+                        'text-primary': '#f0f0f0',
+                        'text-secondary': '#b0b0b0',
+                        'text-muted': '#666666',
+                        'terminal-green': '#39ff14',
+                        'terminal-amber': '#ffb000',
+                        'terminal-red': '#ff3366',
+                    },
+                    fontFamily: {
+                        'display': ['JetBrains Mono', 'monospace'],
+                        'body': ['Inter', 'sans-serif'],
+                        'terminal': ['Fira Code', 'monospace'],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        * { scrollbar-width: thin; scrollbar-color: #00ffff #1a1a2e; }
+        *::-webkit-scrollbar { width: 6px; }
+        *::-webkit-scrollbar-track { background: #1a1a2e; }
+        *::-webkit-scrollbar-thumb { background: #00ffff; border-radius: 3px; }
+        .card { background: linear-gradient(135deg, #1a1a2e 0%, rgba(26, 26, 46, 0.8) 100%); border: 1px solid rgba(255,255,255,0.1); }
+        .stat-glow { text-shadow: 0 0 20px currentColor; }
+    </style>
+</head>
+<body class="bg-void text-text-primary font-body min-h-screen">
+    <!-- Header -->
+    <header class="border-b border-white/10 bg-primary/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <a href="/admin/analytics/visitors" class="text-text-muted hover:text-neon-cyan transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                </a>
+                <h1 class="font-display font-bold text-xl">
+                    <span class="text-neon-magenta">*</span>
+                    <span class="text-neon-cyan">Visitor</span>
+                </h1>
+            </div>
+            <a href="/admin/analytics" class="text-text-muted hover:text-neon-cyan text-sm font-terminal transition-colors">
+                Dashboard
+            </a>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        {% set s = visitor.summary %}
+
+        <!-- Visitor Summary Card -->
+        <div class="card rounded-lg p-6 mb-8">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Identity -->
+                <div>
+                    <div class="text-text-muted text-xs font-terminal uppercase tracking-wider mb-2">Visitor ID</div>
+                    <div class="font-terminal text-neon-cyan text-sm break-all">{{ s.visitor_id }}</div>
+                </div>
+
+                <!-- Location -->
+                <div>
+                    <div class="text-text-muted text-xs font-terminal uppercase tracking-wider mb-2">Location</div>
+                    <div class="text-text-primary">
+                        {% if s.city and s.country %}{{ s.city }}, {{ s.country }}
+                        {% elif s.country %}{{ s.country }}
+                        {% else %}<span class="text-text-muted">Unknown</span>{% endif %}
+                    </div>
+                </div>
+
+                <!-- Device -->
+                <div>
+                    <div class="text-text-muted text-xs font-terminal uppercase tracking-wider mb-2">Device</div>
+                    <div class="text-text-primary">{{ s.browser or 'Unknown' }} / {{ s.os or 'Unknown' }}</div>
+                    <div class="text-text-muted text-sm capitalize">{{ s.device_type or 'unknown' }}</div>
+                </div>
+
+                <!-- Source -->
+                <div>
+                    <div class="text-text-muted text-xs font-terminal uppercase tracking-wider mb-2">Source</div>
+                    {% if s.utm_source %}
+                    <span class="px-2 py-1 bg-terminal-amber/20 text-terminal-amber rounded text-sm font-terminal">{{ s.utm_source }}</span>
+                    {% if s.utm_medium %}<span class="text-text-muted text-sm ml-1">/ {{ s.utm_medium }}</span>{% endif %}
+                    {% if s.utm_campaign %}<div class="text-text-muted text-xs mt-1">{{ s.utm_campaign }}</div>{% endif %}
+                    {% elif s.initial_referrer %}
+                    <div class="text-text-secondary text-sm break-all">{{ s.initial_referrer }}</div>
+                    {% else %}
+                    <span class="text-text-muted">Direct</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Stats Row -->
+            <div class="flex flex-wrap gap-8 mt-6 pt-6 border-t border-white/10">
+                <div>
+                    <div class="text-3xl font-display font-bold text-terminal-green stat-glow">{{ s.total_pageviews }}</div>
+                    <div class="text-text-muted text-xs font-terminal uppercase">Pageviews</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-display font-bold text-neon-purple stat-glow">{{ s.total_events }}</div>
+                    <div class="text-text-muted text-xs font-terminal uppercase">Events</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-display font-bold text-neon-cyan stat-glow">{{ s.total_sessions }}</div>
+                    <div class="text-text-muted text-xs font-terminal uppercase">Sessions</div>
+                </div>
+                <div class="ml-auto text-right">
+                    <div class="text-text-muted text-xs font-terminal">First seen</div>
+                    <div class="font-terminal text-sm text-text-secondary">{{ s.first_seen[:19].replace('T', ' ') if s.first_seen else '-' }}</div>
+                </div>
+                <div class="text-right">
+                    <div class="text-text-muted text-xs font-terminal">Last seen</div>
+                    <div class="font-terminal text-sm text-text-secondary">{{ s.last_seen[:19].replace('T', ' ') if s.last_seen else '-' }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-8">
+            <!-- Activity Timeline -->
+            <div class="card rounded-lg p-6">
+                <h2 class="text-sm font-terminal text-terminal-green mb-4 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-terminal-green"></span>
+                    Pageviews
+                </h2>
+                <div class="space-y-3 max-h-[500px] overflow-y-auto">
+                    {% for pv in visitor.pageviews %}
+                    <div class="flex items-start gap-3 p-3 bg-primary/50 rounded-lg border border-white/5">
+                        <div class="w-1.5 h-1.5 rounded-full bg-terminal-green mt-2 flex-shrink-0"></div>
+                        <div class="flex-1 min-w-0">
+                            <div class="font-terminal text-neon-cyan text-sm truncate">{{ pv.path }}</div>
+                            <div class="text-text-muted text-xs mt-1 font-terminal">
+                                {{ pv.timestamp[:19].replace('T', ' ') }}
+                                {% if pv.response_time_ms %}
+                                <span class="text-text-muted/50 ml-2">{{ pv.response_time_ms }}ms</span>
+                                {% endif %}
+                            </div>
+                            {% if pv.referrer %}
+                            <div class="text-text-muted text-xs mt-1 truncate">via: {{ pv.referrer }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <p class="text-text-muted text-sm">No pageviews</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Events -->
+            <div class="card rounded-lg p-6">
+                <h2 class="text-sm font-terminal text-neon-purple mb-4 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-neon-purple"></span>
+                    Events
+                </h2>
+                <div class="space-y-3 max-h-[500px] overflow-y-auto">
+                    {% for ev in visitor.events %}
+                    <div class="flex items-start gap-3 p-3 bg-primary/50 rounded-lg border border-white/5">
+                        <div class="w-1.5 h-1.5 rounded-full bg-neon-purple mt-2 flex-shrink-0"></div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="px-2 py-0.5 bg-neon-purple/20 text-neon-purple rounded text-xs font-terminal">
+                                    {{ ev.event_name }}
+                                </span>
+                                {% if ev.path %}
+                                <span class="text-text-muted text-xs">on {{ ev.path }}</span>
+                                {% endif %}
+                            </div>
+                            {% if ev.metadata %}
+                            <div class="mt-2 text-xs">
+                                {% if ev.metadata.project %}
+                                <span class="text-terminal-green">Project: {{ ev.metadata.project }}</span>
+                                {% endif %}
+                                {% if ev.metadata.url %}
+                                <span class="text-neon-cyan truncate block">{{ ev.metadata.url }}</span>
+                                {% endif %}
+                                {% if ev.metadata.text %}
+                                <span class="text-text-muted">"{{ ev.metadata.text }}"</span>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                            <div class="text-text-muted text-xs mt-1 font-terminal">
+                                {{ ev.timestamp[:19].replace('T', ' ') }}
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <p class="text-text-muted text-sm">No events</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Sessions -->
+        {% if visitor.sessions %}
+        <div class="card rounded-lg p-6 mt-8">
+            <h2 class="text-sm font-terminal text-neon-cyan mb-4 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-neon-cyan"></span>
+                Sessions
+            </h2>
+            <div class="space-y-3">
+                {% for sess in visitor.sessions %}
+                <div class="flex items-center gap-4 p-3 bg-primary/50 rounded-lg border border-white/5">
+                    <div class="text-neon-cyan font-display text-2xl font-bold">{{ sess.pageviews }}</div>
+                    <div class="flex-1">
+                        <div class="text-sm">
+                            <span class="text-text-muted">Entry:</span>
+                            <span class="text-text-secondary font-terminal">{{ sess.entry_path }}</span>
+                            <span class="text-text-muted mx-2">&rarr;</span>
+                            <span class="text-text-muted">Exit:</span>
+                            <span class="text-text-secondary font-terminal">{{ sess.exit_path }}</span>
+                        </div>
+                        <div class="text-text-muted text-xs mt-1 font-terminal">
+                            {{ sess.started_at[:19].replace('T', ' ') }} - {{ sess.last_seen_at[:19].replace('T', ' ') }}
+                        </div>
+                    </div>
+                    {% if sess.referrer %}
+                    <div class="text-text-muted text-xs">via {{ sess.referrer }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </main>
+</body>
+</html>

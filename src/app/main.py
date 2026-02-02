@@ -9,6 +9,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+from .analytics import AnalyticsMiddleware, AnalyticsStorage
+from .analytics.routes import router as analytics_router
 from .config import get_settings
 from .middleware import SecurityHeadersMiddleware
 from .routes import api, pages
@@ -21,6 +23,11 @@ SRC_ROOT = Path(__file__).parent.parent
 # Initialize settings
 settings = get_settings()
 
+# Initialize analytics storage (shared instance for middleware and routes)
+_data_dir = PROJECT_ROOT / "data"
+_data_dir.mkdir(exist_ok=True)
+analytics_storage = AnalyticsStorage(_data_dir / "analytics.db")
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -31,6 +38,10 @@ async def lifespan(app: FastAPI):
         limits=httpx.Limits(max_connections=20, max_keepalive_connections=10),
         headers={"Accept": "application/vnd.github.v3+json"},
     )
+
+    # Store analytics storage reference in app state for routes
+    app.state.analytics_storage = analytics_storage
+
     yield
     # Cleanup on shutdown
     await app.state.http_client.aclose()
@@ -48,6 +59,9 @@ app = FastAPI(
 
 # Add security headers middleware
 app.add_middleware(SecurityHeadersMiddleware)
+
+# Add analytics tracking middleware (uses shared storage instance)
+app.add_middleware(AnalyticsMiddleware, storage=analytics_storage)
 
 # Add CORS middleware
 app.add_middleware(
@@ -75,6 +89,7 @@ app.state.templates = templates
 # Include routers
 app.include_router(pages.router)
 app.include_router(api.router, prefix="/api")
+app.include_router(analytics_router)
 
 
 @app.get("/health")

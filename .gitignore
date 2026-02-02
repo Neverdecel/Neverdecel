@@ -29,3 +29,6 @@ Thumbs.db
 # Temp files
 *.log
 *.tmp
+
+# Analytics data
+data/
