@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard</title>
+    <meta name="robots" content="noindex, nofollow">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+    </style>
+</head>
+<body class="bg-gray-950 text-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="border-b border-gray-800 bg-gray-900/50 sticky top-0 z-50 backdrop-blur">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <h1 class="text-xl font-bold text-cyan-400 font-mono">Analytics</h1>
+                <span class="text-gray-500 text-sm">neverdecel.com</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <!-- Time range selector -->
+                <select
+                    id="days-select"
+                    onchange="window.location.href='?days=' + this.value"
+                    class="bg-gray-800 border border-gray-700 rounded px-3 py-1.5 text-sm
+                           focus:outline-none focus:border-cyan-500"
+                >
+                    <option value="7" {% if days == 7 %}selected{% endif %}>Last 7 days</option>
+                    <option value="30" {% if days == 30 %}selected{% endif %}>Last 30 days</option>
+                    <option value="90" {% if days == 90 %}selected{% endif %}>Last 90 days</option>
+                    <option value="365" {% if days == 365 %}selected{% endif %}>Last year</option>
+                </select>
+                <a href="/admin/analytics/logout"
+                   class="text-gray-400 hover:text-white text-sm transition-colors">
+                    Logout
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Live indicator -->
+        <div class="flex items-center gap-2 mb-6">
+            <span class="relative flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+            </span>
+            <span class="text-green-400 text-sm font-mono">
+                {{ stats.live_visitors }} visitor{% if stats.live_visitors != 1 %}s{% endif %} now
+            </span>
+        </div>
+
+        <!-- Key metrics -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
+                <div class="text-gray-400 text-sm mb-1">Pageviews</div>
+                <div class="text-3xl font-bold text-white font-mono">{{ "{:,}".format(stats.total_pageviews) }}</div>
+            </div>
+            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
+                <div class="text-gray-400 text-sm mb-1">Unique Visitors</div>
+                <div class="text-3xl font-bold text-cyan-400 font-mono">{{ "{:,}".format(stats.unique_visitors) }}</div>
+            </div>
+            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
+                <div class="text-gray-400 text-sm mb-1">Sessions</div>
+                <div class="text-3xl font-bold text-white font-mono">{{ "{:,}".format(stats.total_sessions) }}</div>
+            </div>
+            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
+                <div class="text-gray-400 text-sm mb-1">Pages/Session</div>
+                <div class="text-3xl font-bold text-white font-mono">{{ stats.avg_pages_per_session }}</div>
+            </div>
+        </div>
+
+        <!-- Charts row -->
+        <div class="grid md:grid-cols-2 gap-6 mb-8">
+            <!-- Visitors over time -->
+            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
+                <h2 class="text-lg font-semibold mb-4">Visitors</h2>
+                <canvas id="visitors-chart" height="200"></canvas>
+            </div>
+
+            <!-- Pageviews over time -->
+            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
+                <h2 class="text-lg font-semibold mb-4">Pageviews</h2>
+                <canvas id="pageviews-chart" height="200"></canvas>
+            </div>
+        </div>
+
+        <!-- Data tables -->
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
+            <!-- Top pages -->
+            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
+                <h2 class="text-lg font-semibold mb-4">Top Pages</h2>
+                <div class="space-y-2">
+                    {% for page in stats.top_pages %}
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300 truncate font-mono text-sm" title="{{ page.path }}">
+                            {{ page.path }}
+                        </span>
+                        <span class="text-cyan-400 font-mono text-sm ml-2">{{ page.views }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Top referrers -->
+            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
+                <h2 class="text-lg font-semibold mb-4">Referrers</h2>
+                <div class="space-y-2">
+                    {% for ref in stats.top_referrers %}
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300 truncate text-sm" title="{{ ref.referrer }}">
+                            {{ ref.referrer }}
+                        </span>
+                        <span class="text-cyan-400 font-mono text-sm ml-2">{{ ref.count }}</span>
+                    </div>
+                    {% else %}
+                    <p class="text-gray-500 text-sm">No referrers yet</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Countries -->
+            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
+                <h2 class="text-lg font-semibold mb-4">Countries</h2>
+                <div class="space-y-2">
+                    {% for c in stats.countries %}
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300 text-sm">{{ c.country }}</span>
+                        <span class="text-cyan-400 font-mono text-sm">{{ c.count }}</span>
+                    </div>
+                    {% else %}
+                    <p class="text-gray-500 text-sm">No data yet</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Second row of tables -->
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
+            <!-- Browsers -->
+            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
+                <h2 class="text-lg font-semibold mb-4">Browsers</h2>
+                <div class="space-y-2">
+                    {% for b in stats.browsers %}
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300 text-sm">{{ b.browser }}</span>
+                        <span class="text-cyan-400 font-mono text-sm">{{ b.count }}</span>
+                    </div>
+                    {% else %}
+                    <p class="text-gray-500 text-sm">No data yet</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Operating systems -->
+            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
+                <h2 class="text-lg font-semibold mb-4">Operating Systems</h2>
+                <div class="space-y-2">
+                    {% for o in stats.operating_systems %}
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300 text-sm">{{ o.os }}</span>
+                        <span class="text-cyan-400 font-mono text-sm">{{ o.count }}</span>
+                    </div>
+                    {% else %}
+                    <p class="text-gray-500 text-sm">No data yet</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Devices -->
+            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
+                <h2 class="text-lg font-semibold mb-4">Devices</h2>
+                <div class="space-y-2">
+                    {% for d in stats.device_types %}
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300 text-sm capitalize">{{ d.device }}</span>
+                        <span class="text-cyan-400 font-mono text-sm">{{ d.count }}</span>
+                    </div>
+                    {% else %}
+                    <p class="text-gray-500 text-sm">No data yet</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Events & Bots -->
+        <div class="grid md:grid-cols-2 gap-6 mb-8">
+            <!-- Events -->
+            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
+                <h2 class="text-lg font-semibold mb-4">Events</h2>
+                <div class="space-y-2">
+                    {% for e in stats.events %}
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300 font-mono text-sm">{{ e.event }}</span>
+                        <span class="text-cyan-400 font-mono text-sm">{{ e.count }}</span>
+                    </div>
+                    {% else %}
+                    <p class="text-gray-500 text-sm">No events tracked yet</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Bot traffic -->
+            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
+                <h2 class="text-lg font-semibold mb-4">Bot Traffic</h2>
+                <div class="text-3xl font-bold text-orange-400 font-mono mb-2">
+                    {{ "{:,}".format(stats.bot_requests) }}
+                </div>
+                <p class="text-gray-500 text-sm">
+                    requests from bots/crawlers (excluded from stats)
+                </p>
+            </div>
+        </div>
+
+        <!-- Recent visitors -->
+        <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
+            <h2 class="text-lg font-semibold mb-4">Recent Visitors</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="text-gray-400 text-left border-b border-gray-800">
+                            <th class="pb-2 font-medium">Time</th>
+                            <th class="pb-2 font-medium">Page</th>
+                            <th class="pb-2 font-medium">Location</th>
+                            <th class="pb-2 font-medium">Browser</th>
+                            <th class="pb-2 font-medium">Device</th>
+                            <th class="pb-2 font-medium">Referrer</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-800">
+                        {% for v in recent %}
+                        <tr class="text-gray-300">
+                            <td class="py-2 font-mono text-xs text-gray-500">
+                                {{ v.timestamp[:16].replace('T', ' ') }}
+                            </td>
+                            <td class="py-2 font-mono truncate max-w-[150px]" title="{{ v.path }}">
+                                {{ v.path }}
+                            </td>
+                            <td class="py-2">
+                                {% if v.city and v.country %}
+                                {{ v.city }}, {{ v.country }}
+                                {% elif v.country %}
+                                {{ v.country }}
+                                {% else %}
+                                <span class="text-gray-600">-</span>
+                                {% endif %}
+                            </td>
+                            <td class="py-2">{{ v.browser or '-' }}</td>
+                            <td class="py-2 capitalize">{{ v.device_type or '-' }}</td>
+                            <td class="py-2 truncate max-w-[120px]" title="{{ v.referrer or '' }}">
+                                {{ v.referrer or '-' }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Charts initialization -->
+    <script>
+        // Chart.js config
+        Chart.defaults.color = '#9ca3af';
+        Chart.defaults.borderColor = '#374151';
+
+        // Visitors chart
+        const visitorsCtx = document.getElementById('visitors-chart').getContext('2d');
+        new Chart(visitorsCtx, {
+            type: 'line',
+            data: {
+                labels: {{ stats.visitors_over_time | map(attribute='date') | list | tojson }},
+                datasets: [{
+                    label: 'Visitors',
+                    data: {{ stats.visitors_over_time | map(attribute='visitors') | list | tojson }},
+                    borderColor: '#06b6d4',
+                    backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                    fill: true,
+                    tension: 0.3,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#1f2937' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // Pageviews chart
+        const pageviewsCtx = document.getElementById('pageviews-chart').getContext('2d');
+        new Chart(pageviewsCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ stats.pageviews_over_time | map(attribute='date') | list | tojson }},
+                datasets: [{
+                    label: 'Pageviews',
+                    data: {{ stats.pageviews_over_time | map(attribute='views') | list | tojson }},
+                    backgroundColor: 'rgba(6, 182, 212, 0.5)',
+                    borderColor: '#06b6d4',
+                    borderWidth: 1,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#1f2937' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // Auto-refresh every 60 seconds
+        setTimeout(() => location.reload(), 60000);
+    </script>
+</body>
+</html>

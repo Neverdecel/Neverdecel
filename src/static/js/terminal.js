@@ -138,6 +138,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================================
+    // Analytics Event Tracking
+    // =========================================
+
+    function trackEvent(eventName) {
+        // Fire and forget - don't block UI
+        const data = new FormData();
+        data.append('event', eventName);
+        data.append('path', window.location.pathname);
+        navigator.sendBeacon('/admin/analytics/api/event', data);
+    }
+
+    // =========================================
     // Form Submission Handling
     // =========================================
 
@@ -159,6 +171,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 commandHistory.shift();
             }
             historyIndex = -1;
+
+            // Track Ava interaction
+            trackEvent('ava_chat');
         }
     });
 
