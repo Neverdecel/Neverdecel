@@ -91,10 +91,7 @@ class AnalyticsMiddleware(BaseHTTPMiddleware):
             return False
 
         # Skip non-GET/POST methods (OPTIONS, HEAD, etc.)
-        if request.method not in ("GET", "POST"):
-            return False
-
-        return True
+        return request.method in ("GET", "POST")
 
     async def dispatch(self, request: Request, call_next) -> Response:
         """Process request and track analytics."""

@@ -1,6 +1,5 @@
 """SQLite storage for analytics data."""
 
-import hashlib
 import sqlite3
 import threading
 from datetime import datetime, timedelta
@@ -113,17 +112,27 @@ class AnalyticsStorage:
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
-                timestamp, path, referrer, visitor_hash, ip_address,
-                country, city, user_agent, browser, browser_version,
-                os, device_type, int(is_bot), response_time_ms, status_code,
+                timestamp,
+                path,
+                referrer,
+                visitor_hash,
+                ip_address,
+                country,
+                city,
+                user_agent,
+                browser,
+                browser_version,
+                os,
+                device_type,
+                int(is_bot),
+                response_time_ms,
+                status_code,
             ),
         )
         conn.commit()
 
         # Update or create session (30 min window)
-        self._update_session(
-            visitor_hash, path, referrer, country, device_type, timestamp
-        )
+        self._update_session(visitor_hash, path, referrer, country, device_type, timestamp)
 
         return cursor.lastrowid
 
@@ -185,6 +194,7 @@ class AnalyticsStorage:
         timestamp = datetime.utcnow().isoformat()
 
         import json
+
         metadata_json = json.dumps(metadata) if metadata else None
 
         cursor = conn.execute(
@@ -308,7 +318,9 @@ class AnalyticsStorage:
             """,
             (cutoff,),
         ).fetchall()
-        stats["cities"] = [{"city": r["city"], "country": r["country"], "count": r["count"]} for r in rows]
+        stats["cities"] = [
+            {"city": r["city"], "country": r["country"], "count": r["count"]} for r in rows
+        ]
 
         # Pageviews over time (daily)
         rows = conn.execute(

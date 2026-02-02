@@ -5,17 +5,60 @@ from dataclasses import dataclass
 
 # Common bot patterns
 BOT_PATTERNS = [
-    r"bot", r"crawl", r"spider", r"slurp", r"search", r"fetch",
-    r"scrape", r"wget", r"curl", r"python-requests", r"python-urllib",
-    r"java", r"perl", r"ruby", r"go-http", r"apache-httpclient",
-    r"googlebot", r"bingbot", r"yandex", r"baidu", r"duckduck",
-    r"facebook", r"twitter", r"whatsapp", r"telegram", r"slack",
-    r"discord", r"linkedin", r"pinterest", r"semrush", r"ahrefs",
-    r"mj12bot", r"dotbot", r"petalbot", r"bytespider", r"gptbot",
-    r"claudebot", r"anthropic", r"openai", r"chatgpt",
-    r"headless", r"phantom", r"selenium", r"puppeteer", r"playwright",
-    r"lighthouse", r"pagespeed", r"gtmetrix", r"pingdom",
-    r"uptime", r"monitor", r"health", r"probe", r"check",
+    r"bot",
+    r"crawl",
+    r"spider",
+    r"slurp",
+    r"search",
+    r"fetch",
+    r"scrape",
+    r"wget",
+    r"curl",
+    r"python-requests",
+    r"python-urllib",
+    r"java",
+    r"perl",
+    r"ruby",
+    r"go-http",
+    r"apache-httpclient",
+    r"googlebot",
+    r"bingbot",
+    r"yandex",
+    r"baidu",
+    r"duckduck",
+    r"facebook",
+    r"twitter",
+    r"whatsapp",
+    r"telegram",
+    r"slack",
+    r"discord",
+    r"linkedin",
+    r"pinterest",
+    r"semrush",
+    r"ahrefs",
+    r"mj12bot",
+    r"dotbot",
+    r"petalbot",
+    r"bytespider",
+    r"gptbot",
+    r"claudebot",
+    r"anthropic",
+    r"openai",
+    r"chatgpt",
+    r"headless",
+    r"phantom",
+    r"selenium",
+    r"puppeteer",
+    r"playwright",
+    r"lighthouse",
+    r"pagespeed",
+    r"gtmetrix",
+    r"pingdom",
+    r"uptime",
+    r"monitor",
+    r"health",
+    r"probe",
+    r"check",
 ]
 
 BOT_REGEX = re.compile("|".join(BOT_PATTERNS), re.IGNORECASE)
@@ -52,18 +95,28 @@ OS_PATTERNS = [
 
 # Device type patterns
 MOBILE_PATTERNS = [
-    r"Mobile", r"Android", r"iPhone", r"iPod", r"BlackBerry",
-    r"Windows Phone", r"Opera Mini", r"Opera Mobi",
+    r"Mobile",
+    r"Android",
+    r"iPhone",
+    r"iPod",
+    r"BlackBerry",
+    r"Windows Phone",
+    r"Opera Mini",
+    r"Opera Mobi",
 ]
 
 TABLET_PATTERNS = [
-    r"iPad", r"Tablet", r"PlayBook", r"Silk",
+    r"iPad",
+    r"Tablet",
+    r"PlayBook",
+    r"Silk",
 ]
 
 
 @dataclass
 class ParsedUserAgent:
     """Parsed user agent information."""
+
     browser: str | None
     browser_version: str | None
     os: str | None

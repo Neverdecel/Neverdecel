@@ -23,10 +23,16 @@ COPY src/ ./src/
 COPY image/ ./image/
 COPY docs/ ./docs/
 
-# Create non-root user
+# Create data directory for analytics persistence
+RUN mkdir -p /app/data
+
+# Create non-root user and set ownership
 RUN adduser --disabled-password --gecos '' appuser && \
     chown -R appuser:appuser /app
 USER appuser
+
+# Declare volume for analytics data persistence
+VOLUME ["/app/data"]
 
 # Expose port
 EXPOSE 9575

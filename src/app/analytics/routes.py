@@ -3,10 +3,10 @@
 import hashlib
 import os
 import secrets
+from collections.abc import Callable
 from functools import wraps
-from typing import Callable
 
-from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response
+from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 
 from .storage import AnalyticsStorage
@@ -33,11 +33,13 @@ def _check_auth(request: Request) -> bool:
 
 def require_auth(func: Callable):
     """Decorator to require authentication."""
+
     @wraps(func)
     async def wrapper(request: Request, *args, **kwargs):
         if not _check_auth(request):
             return RedirectResponse(url="/admin/analytics/login", status_code=302)
         return await func(request, *args, **kwargs)
+
     return wrapper
 
 
@@ -169,6 +171,7 @@ async def track_event(
 
     # Create visitor hash (must match middleware logic)
     from datetime import datetime
+
     today = datetime.utcnow().strftime("%Y-%m-%d")
     salt = hashlib.sha256(f"neverdecel-{today}-secret".encode()).hexdigest()
     visitor_hash = hashlib.sha256(f"{ip}-{salt}".encode()).hexdigest()[:16]

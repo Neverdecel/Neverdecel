@@ -4,7 +4,6 @@ import asyncio
 import logging
 from dataclasses import dataclass
 from functools import lru_cache
-from typing import Any
 
 import httpx
 
@@ -14,6 +13,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class GeoInfo:
     """Geographic information from IP lookup."""
+
     country: str | None
     country_code: str | None
     region: str | None
@@ -31,10 +31,30 @@ _cache_lock = asyncio.Lock()
 
 # Private/local IP ranges that shouldn't be looked up
 PRIVATE_IP_PREFIXES = (
-    "127.", "10.", "172.16.", "172.17.", "172.18.", "172.19.",
-    "172.20.", "172.21.", "172.22.", "172.23.", "172.24.", "172.25.",
-    "172.26.", "172.27.", "172.28.", "172.29.", "172.30.", "172.31.",
-    "192.168.", "::1", "fe80:", "fc00:", "fd00:", "localhost",
+    "127.",
+    "10.",
+    "172.16.",
+    "172.17.",
+    "172.18.",
+    "172.19.",
+    "172.20.",
+    "172.21.",
+    "172.22.",
+    "172.23.",
+    "172.24.",
+    "172.25.",
+    "172.26.",
+    "172.27.",
+    "172.28.",
+    "172.29.",
+    "172.30.",
+    "172.31.",
+    "192.168.",
+    "::1",
+    "fe80:",
+    "fc00:",
+    "fd00:",
+    "localhost",
 )
 
 
@@ -51,8 +71,15 @@ async def lookup_ip(ip: str, client: httpx.AsyncClient | None = None) -> GeoInfo
     # Return empty for private IPs
     if is_private_ip(ip):
         return GeoInfo(
-            country=None, country_code=None, region=None, city=None,
-            lat=None, lon=None, isp=None, is_proxy=False, is_hosting=False,
+            country=None,
+            country_code=None,
+            region=None,
+            city=None,
+            lat=None,
+            lon=None,
+            isp=None,
+            is_proxy=False,
+            is_hosting=False,
         )
 
     # Check cache
@@ -113,8 +140,15 @@ async def lookup_ip(ip: str, client: httpx.AsyncClient | None = None) -> GeoInfo
 
     # Return empty on failure
     return GeoInfo(
-        country=None, country_code=None, region=None, city=None,
-        lat=None, lon=None, isp=None, is_proxy=False, is_hosting=False,
+        country=None,
+        country_code=None,
+        region=None,
+        city=None,
+        lat=None,
+        lon=None,
+        isp=None,
+        is_proxy=False,
+        is_hosting=False,
     )
 
 
