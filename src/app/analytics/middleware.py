@@ -38,23 +38,36 @@ class AnalyticsMiddleware(BaseHTTPMiddleware):
 
     def _get_client_ip(self, request: Request) -> str:
         """Extract real client IP from request."""
-        # Check common proxy headers
+        # Debug: log all IP-related headers
+        cf_ip = request.headers.get("cf-connecting-ip")
         forwarded = request.headers.get("x-forwarded-for")
+        real_ip = request.headers.get("x-real-ip")
+        client_host = request.client.host if request.client else None
+
+        logger.info(
+            "IP headers - CF-Connecting-IP: %s, X-Forwarded-For: %s, "
+            "X-Real-IP: %s, client.host: %s",
+            cf_ip,
+            forwarded,
+            real_ip,
+            client_host,
+        )
+
+        # Cloudflare-specific header (most reliable when using CF tunnel)
+        if cf_ip:
+            return cf_ip.strip()
+
+        # Check X-Forwarded-For (may contain multiple IPs)
         if forwarded:
             # Take first IP (original client)
             return forwarded.split(",")[0].strip()
 
-        real_ip = request.headers.get("x-real-ip")
         if real_ip:
             return real_ip.strip()
 
-        cf_ip = request.headers.get("cf-connecting-ip")
-        if cf_ip:
-            return cf_ip.strip()
-
         # Fall back to direct connection
-        if request.client:
-            return request.client.host
+        if client_host:
+            return client_host
 
         return "unknown"
 
