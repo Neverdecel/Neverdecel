@@ -44,13 +44,9 @@ class AnalyticsMiddleware(BaseHTTPMiddleware):
         real_ip = request.headers.get("x-real-ip")
         client_host = request.client.host if request.client else None
 
-        logger.info(
-            "IP headers - CF-Connecting-IP: %s, X-Forwarded-For: %s, "
-            "X-Real-IP: %s, client.host: %s",
-            cf_ip,
-            forwarded,
-            real_ip,
-            client_host,
+        print(
+            f"[DEBUG IP] CF-Connecting-IP: {cf_ip}, X-Forwarded-For: {forwarded}, "
+            f"X-Real-IP: {real_ip}, client.host: {client_host}"
         )
 
         # Cloudflare-specific header (most reliable when using CF tunnel)
